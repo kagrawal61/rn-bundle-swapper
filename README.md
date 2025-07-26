@@ -146,13 +146,5 @@ await swapIosIpa({
 
 ---
 
-## Roadmap
-- [ ] Android: support for AAB?
-- [ ] iOS: support for entitlements customization
-- [ ] More robust error reporting
-- [ ] Test matrix for various RN/SDK versions
-
----
-
 ## License
 MIT 
