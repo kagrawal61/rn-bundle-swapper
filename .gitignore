@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.env
+*.log
+.idea/
+.vscode/
+.DS_Store
+
+# Build artifacts
+*.apk
+*.idsig
+*.ipa
+
+# Test coverage
+coverage/
+
+# Temp files
+temp*/
+
+# Claude Code
+memory/
+CLAUDE.md
