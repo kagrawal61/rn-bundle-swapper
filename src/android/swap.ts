@@ -116,6 +116,9 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
   // Sign APK
   const signArgs = [
     'sign',
+    '--v2-signing-enabled', 'true',
+    '--v3-signing-enabled', 'false',
+    '--v4-signing-enabled', 'true', // Enable v4 signing for incremental installation
     '--ks',
     keystorePath,
     '--ks-pass',
@@ -127,7 +130,7 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
     alignedApk,
   ];
   if (keyPassword) {
-    signArgs.splice(6, 0, '--key-pass', `pass:${keyPassword}`); // insert after ks-key-alias
+    signArgs.splice(12, 0, '--key-pass', `pass:${keyPassword}`); // insert after ks-key-alias
   }
 
   const signSpinner = logger.spinner('Signing APK...');
