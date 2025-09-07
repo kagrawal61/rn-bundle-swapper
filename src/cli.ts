@@ -41,7 +41,7 @@ program
   .requiredOption('--ks-alias <alias>', 'Keystore alias')
   .option('--key-pass <password>', 'Key password')
   .option('-o, --output <path>', 'Output APK path', 'patched.apk')
-  .option('--copy-assets', 'Copy Metro assets', false)
+  // Assets are always copied automatically
   .addHelpText('after', `\nExample:\n  $ rn-bundle-swapper android app-release-unsigned.apk \\\n    --jsbundle index.android.bundle \\\n    --keystore my.keystore --ks-pass android --ks-alias myalias \\\n    --output patched.apk\n`)
   .action(async (apkPath, options) => {
     try {
@@ -53,7 +53,6 @@ program
         keyAlias: options.ksAlias,
         keyPassword: options.keyPass,
         outputPath: options.output,
-        copyAssets: options.copyAssets,
       });
       console.log(chalk.green(`✔ APK written to ${options.output}`));
     } catch (e) {
@@ -67,7 +66,7 @@ program
   .description('Swap bundle in an iOS .app (Simulator)')
   .requiredOption('--jsbundle <path>', 'Path to JS bundle')
   .option('-o, --output <path>', 'Output .app path', 'Patched.app')
-  .option('--copy-assets', 'Copy Metro assets', false)
+  // Assets are always copied automatically
   .addHelpText('after', `\nExample:\n  $ rn-bundle-swapper ios-app MyApp.app \\\n    --jsbundle main.jsbundle \\\n    --output Patched.app\n`)
   .action(async (appPath, options) => {
     try {
@@ -75,7 +74,6 @@ program
         appPath,
         jsBundlePath: required(options.jsbundle, 'JS bundle path'),
         outputPath: options.output,
-        copyAssets: options.copyAssets,
       });
       console.log(chalk.green(`✔ .app written to ${options.output}`));
     } catch (e) {
@@ -91,7 +89,7 @@ program
   .requiredOption('--identity <identity>', 'Codesign identity')
   .option('-o, --output <path>', 'Output .ipa path', 'Patched.ipa')
   .option('--ci', 'Fail if identity not found; non-interactive', false)
-  .option('--copy-assets', 'Copy Metro assets', false)
+  // Assets are always copied automatically
   .addHelpText('after', `\nExample (CI mode):\n  $ rn-bundle-swapper ios-ipa MyApp.ipa \\\n    --jsbundle main.jsbundle \\\n    --identity "Apple Distribution: Example Corp (TEAMID)" \\\n    --output Patched.ipa \\\n    --ci\n`)
   .action(async (ipaPath, options) => {
     try {
@@ -101,7 +99,6 @@ program
         identity: options.identity,
         outputPath: options.output,
         ci: options.ci,
-        copyAssets: options.copyAssets,
       });
       console.log(chalk.green(`✔ .ipa written to ${options.output}`));
     } catch (e) {

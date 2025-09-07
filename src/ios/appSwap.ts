@@ -11,10 +11,10 @@ function assertExists(p: string, label: string) {
 /**
  * Swap JS bundle inside an unzipped .app bundle (Simulator build).
  *  - Replaces main.jsbundle
- *  - Optionally copies Metro assets into the bundle (root/assets)
+ *  - Copies Metro assets into the bundle (root/assets) if found
  */
 export async function swapIosApp(opts: IosAppSwapOptions): Promise<void> {
-  const { appPath, jsBundlePath, outputPath, copyAssets } = opts;
+  const { appPath, jsBundlePath, outputPath } = opts;
 
   assertExists(appPath, '.app directory');
   assertExists(jsBundlePath, 'JS bundle');
@@ -29,14 +29,36 @@ export async function swapIosApp(opts: IosAppSwapOptions): Promise<void> {
   const destBundle = path.join(outputPath, 'main.jsbundle');
   await fs.copyFile(jsBundlePath, destBundle);
 
-  if (copyAssets) {
-    // Assume assets directory sits next to the JS bundle as "assets"
-    const srcAssetsDir = path.join(path.dirname(jsBundlePath), 'assets');
+  // Always copy assets if they exist
+  // Look for assets in multiple possible locations
+  const bundleDir = path.dirname(jsBundlePath);
+  const parentDir = path.dirname(bundleDir);
+  
+  // Try multiple possible locations for assets
+  const candidateDirs = [
+    // Direct siblings of the bundle
+    path.join(bundleDir, 'assets'),
+    // In a sibling directory of the bundle's directory
+    path.join(parentDir, 'assets'),
+    // In a standard Metro output structure
+    path.join(parentDir, 'ios', 'assets'),
+  ];
+  
+  console.log(`Looking for iOS assets in multiple locations...`);
+  
+  let foundAssets = false;
+  for (const srcAssetsDir of candidateDirs) {
     if (await fs.pathExists(srcAssetsDir)) {
+      console.log(`Found assets directory at: ${srcAssetsDir}`);
       const destAssetsDir = path.join(outputPath, 'assets');
       await fs.copy(srcAssetsDir, destAssetsDir);
-    } else {
-      console.warn(`⚠️  copyAssets requested, but no assets directory found at ${srcAssetsDir}`);
+      console.log(`Copied assets to: ${destAssetsDir}`);
+      foundAssets = true;
+      break;
     }
+  }
+  
+  if (!foundAssets) {
+    console.warn(`⚠️  No assets directory found in any of the expected locations`);
   }
 } 

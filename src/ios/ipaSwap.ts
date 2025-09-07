@@ -15,7 +15,7 @@ function assertExists(p: string, label: string) {
  * Replace JS bundle inside IPA and re-sign.
  */
 export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
-  const { ipaPath, jsBundlePath, outputPath, identity, ci, copyAssets } = opts;
+  const { ipaPath, jsBundlePath, outputPath, identity, ci } = opts;
 
   assertExists(ipaPath, 'IPA');
   assertExists(jsBundlePath, 'JS bundle');
@@ -45,15 +45,37 @@ export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
   const destBundle = path.join(appPath, 'main.jsbundle');
   await fs.copyFile(jsBundlePath, destBundle);
 
-  // Handle assets copy
-  if (copyAssets) {
-    const srcAssets = path.join(path.dirname(jsBundlePath), 'assets');
+  // Always copy assets if they exist
+  // Look for assets in multiple possible locations
+  const bundleDir = path.dirname(jsBundlePath);
+  const parentDir = path.dirname(bundleDir);
+  
+  // Try multiple possible locations for assets
+  const candidateDirs = [
+    // Direct siblings of the bundle
+    path.join(bundleDir, 'assets'),
+    // In a sibling directory of the bundle's directory
+    path.join(parentDir, 'assets'),
+    // In a standard Metro output structure
+    path.join(parentDir, 'ios', 'assets'),
+  ];
+  
+  console.log(`Looking for iOS assets in multiple locations...`);
+  
+  let foundAssets = false;
+  for (const srcAssets of candidateDirs) {
     if (await fs.pathExists(srcAssets)) {
+      console.log(`Found assets directory at: ${srcAssets}`);
       const destAssets = path.join(appPath, 'assets');
       await fs.copy(srcAssets, destAssets);
-    } else {
-      console.warn(`⚠️  copyAssets requested but assets directory not found at ${srcAssets}`);
+      console.log(`Copied assets to: ${destAssets}`);
+      foundAssets = true;
+      break;
     }
+  }
+  
+  if (!foundAssets) {
+    console.warn(`⚠️  No assets directory found in any of the expected locations`);
   }
 
   // Re-sign .app bundle

@@ -6,14 +6,12 @@ export interface AndroidSwapOptions {
   keyAlias: string;
   keyPassword?: string;
   outputPath: string;
-  copyAssets?: boolean;
 }
 
 export interface IosAppSwapOptions {
   appPath: string;
   jsBundlePath: string;
   outputPath: string;
-  copyAssets?: boolean;
 }
 
 export interface IosIpaSwapOptions {

@@ -25,7 +25,6 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
     keystorePassword,
     keyAlias,
     keyPassword,
-    copyAssets,
   } = opts;
 
   assertFileExists(apkPath, 'APK');
@@ -43,35 +42,59 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
   }
   zip.addFile(bundleEntry, bundleContent);
 
-  // TODO: Copy assets if requested
-  if (copyAssets) {
-    // React Native bundles assets into res/drawable*/ etc. Expect a 'res' directory adjacent to bundle or within 'assets'.
+  // Always copy assets
+  {
+    // Look for assets in multiple possible locations
+    const bundleDir = path.dirname(jsBundlePath);
+    const parentDir = path.dirname(bundleDir);
+    
+    // React Native bundles assets into res/drawable*/ etc.
+    // Try multiple possible locations for assets
     const candidateDirs = [
-      path.join(path.dirname(jsBundlePath), 'res'),
-      path.join(path.dirname(jsBundlePath), 'assets'),
+      // Direct siblings of the bundle
+      path.join(bundleDir, 'assets'), // Metro output places assets here
+      path.join(bundleDir, 'res'),
+      // In a sibling directory of the bundle's directory
+      path.join(parentDir, 'assets'),
+      path.join(parentDir, 'res'),
+      // In a standard Metro output structure
+      path.join(parentDir, 'android', 'assets'),
+      path.join(parentDir, 'android', 'res'),
     ];
+    
+    logger.info(`Looking for Android assets in multiple locations...`);
+    
     let assetsDir: string | null = null;
     for (const dir of candidateDirs) {
       if (await fs.pathExists(dir)) {
+        logger.info(`Found assets directory at: ${dir}`);
         assetsDir = dir;
         break;
       }
     }
+    
     if (assetsDir) {
       const entries = await fs.readdir(assetsDir);
       for (const entry of entries) {
         const full = path.join(assetsDir, entry);
         const stats = await fs.stat(full);
         if (stats.isDirectory()) {
-          await addDirToZip(zip, full, path.posix.join('res', entry));
+          logger.info(`Adding asset directory: ${entry}`);
+          // For drawable directories, preserve the exact path structure
+          if (entry.startsWith('drawable')) {
+            await addDirToZip(zip, full, entry);
+          } else {
+            await addDirToZip(zip, full, path.posix.join('res', entry));
+          }
         } else {
           // Some assets might be at root; place them under res/raw
+          logger.info(`Adding asset file: ${entry}`);
           const content = await fs.readFile(full);
           zip.addFile(path.posix.join('res', 'raw', entry), content);
         }
       }
     } else {
-      console.warn('copyAssets requested but no res/assets directory found near JS bundle');
+      logger.warn('No res/assets directory found in any of the expected locations');
     }
   }
 
