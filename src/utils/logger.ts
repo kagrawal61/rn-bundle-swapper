@@ -15,6 +15,20 @@ export const logger = {
 
 export type BannerStyle = 'compact' | 'ascii' | 'modern';
 
+function renderCompactBanner(name: string, version: string): void {
+  const msg = `${chalk.bold.cyan(name)}  ${chalk.gray(`v${version}`)}`;
+  const description = chalk.white('Swap JS bundles in React Native apps');
+  const boxed = boxen(`${msg}\n${description}`, {
+    padding: 1,
+    borderStyle: 'round',
+    borderColor: 'cyan',
+    align: 'center',
+    title: chalk.bold.magenta('React Native Bundle Swapper'),
+    titleAlignment: 'center',
+  });
+  console.log(boxed);
+}
+
 export function showBanner(
   name: string,
   version: string,
@@ -22,21 +36,6 @@ export function showBanner(
 ) {
   if (process.env.CI === 'true' || !process.stdout.isTTY) {
     console.log(chalk.gray(`${name} v${version}`));
-    return;
-  }
-
-  if (style === 'compact') {
-    const msg = `${chalk.bold.cyan(name)}  ${chalk.gray(`v${version}`)}`;
-    const description = chalk.white('Swap JS bundles in React Native apps');
-    const boxed = boxen(`${msg}\n${description}`, {
-      padding: 1,
-      borderStyle: 'round',
-      borderColor: 'cyan',
-      align: 'center',
-      title: chalk.bold.magenta('React Native Bundle Swapper'),
-      titleAlignment: 'center',
-    });
-    console.log(boxed);
     return;
   }
 
@@ -50,36 +49,21 @@ export function showBanner(
 
     const longest = ascii.split('\n').reduce((m, l) => Math.max(m, l.length), 0);
 
-    // If too wide for terminal, fall back to compact
     if (longest + 4 > columns) {
-      style = 'compact';
-    } else {
-      const colored = gradient.pastel.multiline(ascii);
-      const footer = chalk.gray.bold(`v${version}`);
-      const description = chalk.white('React Native Bundle Hot-Swapper Tool');
-
-      const boxed = boxen(`${colored}\n${description}\n${footer}`, {
-        padding: 1,
-        borderStyle: 'double',
-        borderColor: 'cyan',
-        backgroundColor: '#111',
-        align: 'center',
-        title: chalk.bold.magenta('React Native Bundle Swapper'),
-        titleAlignment: 'center',
-      });
-      console.log(boxed);
+      // Terminal too narrow — fall back to compact
+      renderCompactBanner(name, version);
       return;
     }
-  }
 
-  // If we reach here and style resolved to compact again
-  if (style === 'compact') {
-    const msg = `${chalk.bold.cyan(name)}  ${chalk.gray(`v${version}`)}`;
-    const description = chalk.white('Swap JS bundles in React Native apps');
-    const boxed = boxen(`${msg}\n${description}`, {
+    const colored = gradient.pastel.multiline(ascii);
+    const footer = chalk.gray.bold(`v${version}`);
+    const description = chalk.white('React Native Bundle Hot-Swapper Tool');
+
+    const boxed = boxen(`${colored}\n${description}\n${footer}`, {
       padding: 1,
-      borderStyle: 'round',
+      borderStyle: 'double',
       borderColor: 'cyan',
+      backgroundColor: '#111',
       align: 'center',
       title: chalk.bold.magenta('React Native Bundle Swapper'),
       titleAlignment: 'center',
@@ -87,4 +71,7 @@ export function showBanner(
     console.log(boxed);
     return;
   }
+
+  // 'compact' or 'ascii' (ascii not yet distinct — renders as compact)
+  renderCompactBanner(name, version);
 }
