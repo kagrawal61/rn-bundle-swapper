@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="420" height="120">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f1117;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1f2e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="roundRect">
+      <rect width="420" height="120" rx="14" ry="14"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="420" height="120" rx="14" ry="14" fill="url(#bgGrad)"/>
+  <rect width="420" height="120" rx="14" ry="14" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-opacity="0.3"/>
+
+  <!-- Icon: two overlapping mobile outlines with swap arrow -->
+  <!-- Left phone -->
+  <rect x="18" y="22" width="34" height="54" rx="5" ry="5" fill="none" stroke="url(#iconGrad)" stroke-width="2.5" filter="url(#glow)"/>
+  <rect x="28" y="26" width="14" height="2" rx="1" fill="#00d4ff" opacity="0.6"/>
+  <rect x="23" y="32" width="24" height="2.5" rx="1.2" fill="#a78bfa" opacity="0.5"/>
+  <rect x="23" y="37" width="18" height="2.5" rx="1.2" fill="#a78bfa" opacity="0.4"/>
+  <rect x="23" y="42" width="21" height="2.5" rx="1.2" fill="#a78bfa" opacity="0.4"/>
+  <rect x="23" y="47" width="14" height="2.5" rx="1.2" fill="#00d4ff" opacity="0.6"/>
+  <circle cx="35" cy="70" r="2.5" fill="#00d4ff" opacity="0.7"/>
+
+  <!-- Right phone -->
+  <rect x="64" y="22" width="34" height="54" rx="5" ry="5" fill="none" stroke="url(#iconGrad)" stroke-width="2.5" filter="url(#glow)"/>
+  <rect x="74" y="26" width="14" height="2" rx="1" fill="#00d4ff" opacity="0.6"/>
+  <rect x="69" y="32" width="24" height="2.5" rx="1.2" fill="#7c3aed" opacity="0.7"/>
+  <rect x="69" y="37" width="18" height="2.5" rx="1.2" fill="#7c3aed" opacity="0.6"/>
+  <rect x="69" y="42" width="21" height="2.5" rx="1.2" fill="#7c3aed" opacity="0.6"/>
+  <rect x="69" y="47" width="24" height="2.5" rx="1.2" fill="#7c3aed" opacity="0.8"/>
+  <circle cx="81" cy="70" r="2.5" fill="#7c3aed" opacity="0.9"/>
+
+  <!-- Swap arrows between phones -->
+  <!-- Top arrow right -->
+  <path d="M 55 36 L 62 36" stroke="#00d4ff" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <polygon points="62,33 66,36 62,39" fill="#00d4ff" filter="url(#glow)"/>
+  <!-- Bottom arrow left -->
+  <path d="M 61 50 L 54 50" stroke="#7c3aed" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <polygon points="54,47 50,50 54,53" fill="#7c3aed" filter="url(#glow)"/>
+
+  <!-- Lightning bolt JS label -->
+  <text x="52" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#00d4ff" opacity="0.8" filter="url(#glow)">JS</text>
+
+  <!-- Vertical divider -->
+  <line x1="116" y1="20" x2="116" y2="100" stroke="#00d4ff" stroke-width="0.8" stroke-opacity="0.2"/>
+
+  <!-- Main title -->
+  <text x="132" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', monospace" font-size="22" font-weight="700" fill="url(#textGrad)" letter-spacing="0.5" filter="url(#glow)">rn-bundle-swapper</text>
+
+  <!-- Subtitle -->
+  <text x="133" y="72" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11.5" fill="#94a3b8" letter-spacing="0.3">Swap JS bundles in React Native apps</text>
+
+  <!-- Stat pills -->
+  <!-- Android pill -->
+  <rect x="133" y="82" width="62" height="18" rx="9" fill="#1e3a2f" stroke="#22c55e" stroke-width="1" stroke-opacity="0.6"/>
+  <text x="164" y="95" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#22c55e">⬟ Android</text>
+
+  <!-- iOS pill -->
+  <rect x="202" y="82" width="46" height="18" rx="9" fill="#1e2a3a" stroke="#60a5fa" stroke-width="1" stroke-opacity="0.6"/>
+  <text x="225" y="95" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#60a5fa"> iOS</text>
+
+  <!-- Speed pill -->
+  <rect x="255" y="82" width="68" height="18" rx="9" fill="#2d1f3d" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.6"/>
+  <text x="289" y="95" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#a78bfa">⚡ ~5 seconds</text>
+</svg>
