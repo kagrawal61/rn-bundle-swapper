@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { IosAppSwapOptions } from '../index.js';
+import { logger } from '../utils/logger.js';
 
 function assertExists(p: string, label: string) {
   if (!fs.existsSync(p)) {
@@ -11,10 +12,10 @@ function assertExists(p: string, label: string) {
 /**
  * Swap JS bundle inside an unzipped .app bundle (Simulator build).
  *  - Replaces main.jsbundle
- *  - Copies Metro assets into the bundle (root/assets) if found
+ *  - Copies Metro assets into the bundle (root/assets) if copyAssets is true
  */
 export async function swapIosApp(opts: IosAppSwapOptions): Promise<void> {
-  const { appPath, jsBundlePath, outputPath } = opts;
+  const { appPath, jsBundlePath, outputPath, copyAssets = false } = opts;
 
   assertExists(appPath, '.app directory');
   assertExists(jsBundlePath, 'JS bundle');
@@ -29,36 +30,31 @@ export async function swapIosApp(opts: IosAppSwapOptions): Promise<void> {
   const destBundle = path.join(outputPath, 'main.jsbundle');
   await fs.copyFile(jsBundlePath, destBundle);
 
-  // Always copy assets if they exist
-  // Look for assets in multiple possible locations
-  const bundleDir = path.dirname(jsBundlePath);
-  const parentDir = path.dirname(bundleDir);
-  
-  // Try multiple possible locations for assets
-  const candidateDirs = [
-    // Direct siblings of the bundle
-    path.join(bundleDir, 'assets'),
-    // In a sibling directory of the bundle's directory
-    path.join(parentDir, 'assets'),
-    // In a standard Metro output structure
-    path.join(parentDir, 'ios', 'assets'),
-  ];
-  
-  console.log(`Looking for iOS assets in multiple locations...`);
-  
-  let foundAssets = false;
-  for (const srcAssetsDir of candidateDirs) {
-    if (await fs.pathExists(srcAssetsDir)) {
-      console.log(`Found assets directory at: ${srcAssetsDir}`);
-      const destAssetsDir = path.join(outputPath, 'assets');
-      await fs.copy(srcAssetsDir, destAssetsDir);
-      console.log(`Copied assets to: ${destAssetsDir}`);
-      foundAssets = true;
-      break;
+  if (copyAssets) {
+    const bundleDir = path.dirname(jsBundlePath);
+    const parentDir = path.dirname(bundleDir);
+
+    const candidateDirs = [
+      path.join(bundleDir, 'assets'),
+      path.join(parentDir, 'assets'),
+      path.join(parentDir, 'ios', 'assets'),
+    ];
+
+    logger.info('Looking for iOS assets...');
+
+    let found = false;
+    for (const srcAssetsDir of candidateDirs) {
+      if (await fs.pathExists(srcAssetsDir)) {
+        const destAssetsDir = path.join(outputPath, 'assets');
+        logger.info(`Copying assets: ${srcAssetsDir} → ${destAssetsDir}`);
+        await fs.copy(srcAssetsDir, destAssetsDir);
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      logger.warn('No assets directory found in any expected location');
     }
   }
-  
-  if (!foundAssets) {
-    console.warn(`⚠️  No assets directory found in any of the expected locations`);
-  }
-} 
+}
