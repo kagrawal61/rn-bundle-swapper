@@ -6,10 +6,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 
-<p align="center">
-  <img src="assets/logo.svg" alt="rn-bundle-swapper" width="420" />
-</p>
-
 > **Patch only the JS. Skip the native build. Test in seconds.**
 
 `rn-bundle-swapper` replaces the JavaScript bundle inside a pre-built React Native APK, `.app`, or `.ipa` — then re-signs it — without touching a single line of native code.
@@ -17,10 +13,6 @@
 > ⚠️ Intended for **internal distribution, QA, and CI workflows** — not for Play Store or App Store submissions.
 
 ---
-
-<p align="center">
-  <img src="assets/demo.gif" alt="rn-bundle-swapper demo" width="700" />
-</p>
 
 ## The problem
 
