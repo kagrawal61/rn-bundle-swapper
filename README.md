@@ -1,10 +1,18 @@
-# rn-bundle-swapper
+<p align="center">
+  <img src="img/logo.svg" alt="rn-bundle-swapper logo" width="128" />
+</p>
+
+<h1 align="center">rn-bundle-swapper</h1>
+
+<p align="center">
 
 [![npm version](https://img.shields.io/npm/v/rn-bundle-swapper.svg)](https://www.npmjs.com/package/rn-bundle-swapper)
 [![npm downloads](https://img.shields.io/npm/dw/rn-bundle-swapper.svg)](https://www.npmjs.com/package/rn-bundle-swapper)
 [![CI](https://github.com/kagrawal61/rn-bundle-swapper/actions/workflows/ci.yml/badge.svg)](https://github.com/kagrawal61/rn-bundle-swapper/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
+
+</p>
 
 > **Patch only the JS. Skip the native build. Test in seconds.**
 
