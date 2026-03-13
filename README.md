@@ -88,7 +88,7 @@ Only the JavaScript bundle is replaced. All native code, frameworks, entitlement
 | | Changed | Unchanged |
 |---|---|---|
 | JS bundle (`index.android.bundle` / `main.jsbundle`) | ✅ | |
-| Metro assets (images, fonts) | ✅ if `--copy-assets` | |
+| Metro assets (images, fonts) | ✅ (default, use `--no-copy-assets` to skip) | |
 | APK/IPA signature | ✅ Re-signed | |
 | Native code (Java/Kotlin/ObjC/Swift) | | ✅ |
 | Native modules | | ✅ |
@@ -184,13 +184,13 @@ rn-bundle-swapper android app-release.apk \
   --output patched.apk
 ```
 
-With Metro assets:
+Without Metro assets (bundle only):
 
 ```sh
 rn-bundle-swapper android app-release.apk \
   --jsbundle index.android.bundle \
   --keystore my.keystore --ks-pass android --ks-alias myalias \
-  --copy-assets \
+  --no-copy-assets \
   --output patched.apk
 ```
 
@@ -247,7 +247,7 @@ rn-bundle-swapper ios-ipa MyApp.ipa \
   --output Patched.ipa
 ```
 
-> When `--build-jsbundle` is used, `--copy-assets` is automatically enabled.
+> Assets are copied by default. Use `--no-copy-assets` to skip.
 
 ---
 
@@ -286,7 +286,7 @@ rn-bundle-swapper android app.apk --config swap.json
 | `--ks-pass <password>` | ✅ | — | Keystore password |
 | `--ks-alias <alias>` | ✅ | — | Key alias |
 | `--key-pass <password>` | — | — | Key password (if different) |
-| `--copy-assets` | — | `false` | Copy Metro assets |
+| `--no-copy-assets` | — | assets copied | Skip copying Metro assets |
 | `-o, --output <path>` | — | `patched.apk` | Output APK path |
 
 #### `ios-app <appPath>`
@@ -297,7 +297,7 @@ rn-bundle-swapper android app.apk --config swap.json
 | `--build-jsbundle` | — | `false` | Build bundle from project |
 | `--project-root <path>` | — | `cwd` | React Native project root |
 | `--no-hermes` | — | Hermes on | Skip Hermes compilation |
-| `--copy-assets` | — | `false` | Copy Metro assets |
+| `--no-copy-assets` | — | assets copied | Skip copying Metro assets |
 | `-o, --output <path>` | — | `Patched.app` | Output `.app` path |
 
 #### `ios-ipa <ipaPath>`
@@ -309,7 +309,7 @@ rn-bundle-swapper android app.apk --config swap.json
 | `--project-root <path>` | — | `cwd` | React Native project root |
 | `--no-hermes` | — | Hermes on | Skip Hermes compilation |
 | `--identity <identity>` | ✅ | — | Codesign identity string |
-| `--copy-assets` | — | `false` | Copy Metro assets |
+| `--no-copy-assets` | — | assets copied | Skip copying Metro assets |
 | `-o, --output <path>` | — | `Patched.ipa` | Output `.ipa` path |
 | `--ci` | — | `false` | Fail fast if codesign unavailable |
 
@@ -351,7 +351,7 @@ await swapAndroid(options: AndroidSwapOptions): Promise<void>
 | `keyAlias` | `string` | ✅ | Key alias |
 | `keyPassword` | `string` | — | Key password (if different) |
 | `outputPath` | `string` | ✅ | Output APK path |
-| `copyAssets` | `boolean` | — | Copy Metro assets (default: `false`) |
+| `copyAssets` | `boolean` | — | Copy Metro assets (default: `true`) |
 
 ```ts
 await swapAndroid({
@@ -378,7 +378,7 @@ await swapIosApp(options: IosAppSwapOptions): Promise<void>
 | `appPath` | `string` | ✅ | Path to `.app` directory |
 | `jsBundlePath` | `string` | ✅ | Path to JS bundle |
 | `outputPath` | `string` | ✅ | Output `.app` path |
-| `copyAssets` | `boolean` | — | Copy Metro assets (default: `false`) |
+| `copyAssets` | `boolean` | — | Copy Metro assets (default: `true`) |
 
 ```ts
 await swapIosApp({
@@ -403,7 +403,7 @@ await swapIosIpa(options: IosIpaSwapOptions): Promise<void>
 | `identity` | `string` | ✅ | Codesign identity |
 | `outputPath` | `string` | ✅ | Output `.ipa` path |
 | `ci` | `boolean` | — | Fail fast if codesign unavailable |
-| `copyAssets` | `boolean` | — | Copy Metro assets (default: `false`) |
+| `copyAssets` | `boolean` | — | Copy Metro assets (default: `true`) |
 
 ```ts
 await swapIosIpa({
@@ -506,7 +506,7 @@ Copy the full identity string exactly, including the team ID in parentheses.
 - Hermes mismatch: make sure `--no-hermes` matches your original build configuration
 
 **IPA installs but shows blank screen**
-Assets are missing. Re-run with `--copy-assets`.
+Assets may be missing or mismatched. Ensure assets are in a standard Metro output location relative to the bundle path.
 
 ---
 
@@ -524,7 +524,7 @@ Hermes compilation will be skipped. This is fine if your app was built without H
 
 - **Signing**: Android always re-signs (v2 + v4 via `apksigner`). iOS `.app` needs no signing (Simulator). iOS `.ipa` uses `codesign --deep` to re-sign embedded frameworks before signing the app bundle.
 - **Passwords**: Keystore passwords are passed to `apksigner` via subprocess environment variables (`env:` scheme), not as CLI arguments — so they are not visible in `ps aux` or system logs.
-- **Assets**: Metro asset copying is opt-in (`--copy-assets`). The tool searches common Metro output locations automatically.
+- **Assets**: Metro asset copying is enabled by default. Use `--no-copy-assets` to skip. The tool searches common Metro output locations automatically.
 - **Hermes**: When `--build-jsbundle` is used, Hermes compilation runs by default. Pass `--no-hermes` to produce a plain JS bundle.
 - **Temp files**: All temporary directories are cleaned up in `finally` blocks, including on failure.
 - **Config file**: Keys in `--config` JSON are validated against an allowlist before injection into argv, preventing flag injection from untrusted files.

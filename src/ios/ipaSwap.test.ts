@@ -35,6 +35,7 @@ const baseOpts = {
   jsBundlePath: 'main.jsbundle',
   identity: 'Apple Distribution: Test Corp (TEAMID)',
   outputPath: 'Patched.ipa',
+  copyAssets: false,
 };
 
 describe('swapIosIpa', () => {

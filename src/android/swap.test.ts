@@ -34,6 +34,7 @@ const baseOpts = {
   keystorePassword: 'kspass',
   keyAlias: 'myalias',
   outputPath: 'patched.apk',
+  copyAssets: false,
 };
 
 function makeMockZip() {

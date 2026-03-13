@@ -25,7 +25,7 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
     keystorePassword,
     keyAlias,
     keyPassword,
-    copyAssets = false,
+    copyAssets = true,
   } = opts;
 
   assertFileExists(apkPath, 'APK');

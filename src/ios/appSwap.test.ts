@@ -20,6 +20,7 @@ const baseOpts = {
   appPath: 'MyApp.app',
   jsBundlePath: 'main.jsbundle',
   outputPath: 'Patched.app',
+  copyAssets: false,
 };
 
 describe('swapIosApp', () => {

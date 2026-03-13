@@ -16,7 +16,7 @@ function assertExists(p: string, label: string) {
  * Replace JS bundle inside IPA and re-sign.
  */
 export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
-  const { ipaPath, jsBundlePath, outputPath, identity, ci, copyAssets = false } = opts;
+  const { ipaPath, jsBundlePath, outputPath, identity, ci, copyAssets = true } = opts;
 
   assertExists(ipaPath, 'IPA');
   assertExists(jsBundlePath, 'JS bundle');

@@ -117,7 +117,7 @@ androidCmd
   .option('--ks-pass <password>', 'Keystore password')
   .option('--ks-alias <alias>', 'Keystore alias')
   .option('--key-pass <password>', 'Key password')
-  .option('--copy-assets', 'Copy Metro assets alongside the bundle', false)
+  .option('--no-copy-assets', 'Skip copying Metro assets alongside the bundle')
   .option('-o, --output <path>', 'Output APK path', 'patched.apk')
   .addHelpText('after', `
 Examples:
@@ -218,7 +218,7 @@ iosAppCmd
   .option('--build-jsbundle', 'Build JS bundle from project before swapping', false)
   .option('--project-root <path>', 'React Native project root (default: cwd)')
   .option('--no-hermes', 'Skip Hermes bytecode compilation when building bundle')
-  .option('--copy-assets', 'Copy Metro assets alongside the bundle', false)
+  .option('--no-copy-assets', 'Skip copying Metro assets alongside the bundle')
   .option('-o, --output <path>', 'Output .app path', 'Patched.app')
   .addHelpText('after', `
 Examples:
@@ -273,7 +273,7 @@ iosIpaCmd
   .option('--project-root <path>', 'React Native project root (default: cwd)')
   .option('--no-hermes', 'Skip Hermes bytecode compilation when building bundle')
   .option('--identity <identity>', 'Codesign identity')
-  .option('--copy-assets', 'Copy Metro assets alongside the bundle', false)
+  .option('--no-copy-assets', 'Skip copying Metro assets alongside the bundle')
   .option('-o, --output <path>', 'Output .ipa path', 'Patched.ipa')
   .option('--ci', 'Fail if identity not found; non-interactive', false)
   .addHelpText('after', `
@@ -346,7 +346,7 @@ program.option('--config <path>', 'Path to JSON config file with arguments');
  */
 const ALLOWED_CONFIG_KEYS = new Set([
   // Shared
-  'jsbundle', 'build-jsbundle', 'project-root', 'no-hermes', 'copy-assets', 'output',
+  'jsbundle', 'build-jsbundle', 'project-root', 'no-hermes', 'copy-assets', 'no-copy-assets', 'output',
   // Android
   'keystore', 'ks-pass', 'ks-alias', 'key-pass',
   // iOS IPA
