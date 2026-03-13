@@ -55,9 +55,9 @@
     "lint": "eslint src --ext .ts",
     "test": "jest --passWithNoTests",
     "prepare": "node -e \"if(require('fs').existsSync('.git')) { require('child_process').execSync('husky install', {stdio:'inherit'}) }\"",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn build",
     "type-check": "tsc --noEmit",
-    "check": "npm run lint && npm run type-check && npm test"
+    "check": "yarn lint && yarn type-check && yarn test"
   },
   "author": "Kushal Agrawal",
   "license": "MIT",
