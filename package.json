@@ -53,7 +53,7 @@
     "build": "tsc --project tsconfig.json",
     "dev": "ts-node src/cli.ts",
     "lint": "eslint src --ext .ts",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "prepare": "node -e \"if(require('fs').existsSync('.git')) { require('child_process').execSync('husky install', {stdio:'inherit'}) }\"",
     "prepublishOnly": "yarn build",
     "type-check": "tsc --noEmit",
