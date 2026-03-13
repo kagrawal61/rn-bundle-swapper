@@ -114,7 +114,6 @@ describe('swapIosIpa', () => {
           '--timestamp=none',
           '--preserve-metadata=entitlements',
         ]),
-        expect.anything()
       );
     });
 

@@ -14,7 +14,7 @@ function App() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Text style={styles.text}>Hello Kushal Agrawal</Text>
+      <Text style={styles.text}>Hello User</Text>
     </View>
   );
 }
@@ -28,10 +28,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  logo: {
-    width: 200,
-    height: 200,
   },
 });
 

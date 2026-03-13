@@ -89,7 +89,7 @@ export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
         '--timestamp=none',
         '--preserve-metadata=entitlements',
         appPath,
-      ], { stdio: 'inherit' });
+      ]);
       signSpinner.succeed('Bundle signed');
     } catch (e) {
       signSpinner.fail('codesign failed');
