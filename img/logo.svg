@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <!-- Background gradient: deep navy → slate -->
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0d1b2e"/>
+      <stop offset="100%" stop-color="#1a2942"/>
+    </linearGradient>
+
+    <!-- Top arrow: bright cyan -->
+    <linearGradient id="arrow-top" x1="80" y1="0" x2="420" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+
+    <!-- Bottom arrow: teal -->
+    <linearGradient id="arrow-bot" x1="432" y1="0" x2="92" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0e7490"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+
+    <!-- Subtle inner glow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- Subtle border -->
+  <rect width="512" height="512" rx="96" fill="none" stroke="#1e3a5f" stroke-width="2"/>
+
+  <!-- Top arrow: left → right (above center) -->
+  <!-- Shaft -->
+  <rect x="88" y="175" width="240" height="28" rx="14" fill="url(#arrow-top)" filter="url(#glow)"/>
+  <!-- Arrowhead (chevron right) -->
+  <path d="M 308 148 L 408 189 L 308 230" stroke="url(#arrow-top)" stroke-width="28"
+        fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+
+  <!-- Bottom arrow: right → left (below center) -->
+  <!-- Shaft -->
+  <rect x="184" y="309" width="240" height="28" rx="14" fill="url(#arrow-bot)" filter="url(#glow)"/>
+  <!-- Arrowhead (chevron left) -->
+  <path d="M 204 282 L 104 323 L 204 364" stroke="url(#arrow-bot)" stroke-width="28"
+        fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>
