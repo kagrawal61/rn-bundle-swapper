@@ -42,9 +42,9 @@ program
   .option('--build-jsbundle', 'Build JS bundle from project before swapping', false)
   .option('--project-root <path>', 'React Native project root (default: cwd)')
   .option('--no-hermes', 'Skip Hermes bytecode compilation when building bundle')
-  .requiredOption('--keystore <path>', 'Path to keystore')
-  .requiredOption('--ks-pass <password>', 'Keystore password')
-  .requiredOption('--ks-alias <alias>', 'Keystore alias')
+  .option('--keystore <path>', 'Path to keystore')
+  .option('--ks-pass <password>', 'Keystore password')
+  .option('--ks-alias <alias>', 'Keystore alias')
   .option('--key-pass <password>', 'Key password')
   .option('--copy-assets', 'Copy Metro assets alongside the bundle', false)
   .option('-o, --output <path>', 'Output APK path', 'patched.apk')
@@ -66,6 +66,13 @@ Examples:
       --keystore my.keystore --ks-pass android --ks-alias myalias
 `)
   .action(async (apkPath, options) => {
+    const missing = ['keystore', 'ksPass', 'ksAlias'].filter((k) => !options[k]);
+    if (missing.length > 0) {
+      const flags = missing.map((k) => `--${k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}`);
+      console.error(chalk.red(`ERROR: missing required option(s): ${flags.join(', ')}`));
+      process.exit(1);
+    }
+
     let jsBundlePath: string;
     let buildOutDir: string | undefined;
 
@@ -163,7 +170,7 @@ program
   .option('--build-jsbundle', 'Build JS bundle from project before swapping', false)
   .option('--project-root <path>', 'React Native project root (default: cwd)')
   .option('--no-hermes', 'Skip Hermes bytecode compilation when building bundle')
-  .requiredOption('--identity <identity>', 'Codesign identity')
+  .option('--identity <identity>', 'Codesign identity')
   .option('--copy-assets', 'Copy Metro assets alongside the bundle', false)
   .option('-o, --output <path>', 'Output .ipa path', 'Patched.ipa')
   .option('--ci', 'Fail if identity not found; non-interactive', false)
@@ -181,6 +188,11 @@ Examples:
       --ci
 `)
   .action(async (ipaPath, options) => {
+    if (!options.identity) {
+      console.error(chalk.red('ERROR: missing required option: --identity'));
+      process.exit(1);
+    }
+
     let jsBundlePath: string;
     let buildOutDir: string | undefined;
 
