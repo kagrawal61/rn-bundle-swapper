@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+  logo: {
+    width: 200,
+    height: 200,
+  },
 });
 
 export default App;
