@@ -27,17 +27,88 @@ program
   .addHelpCommand('help [command]', 'Display help for a specific command')
   .showHelpAfterError('(add --help for usage information)');
 
+function cliError(message: string, hints: string[]): never {
+  console.error('');
+  console.error(chalk.red.bold(`  ✘ ${message}`));
+  if (hints.length > 0) {
+    console.error('');
+    for (const hint of hints) {
+      console.error(chalk.gray(`    ${hint}`));
+    }
+  }
+  console.error('');
+  process.exit(1);
+}
+
 function requireBundlePath(options: Record<string, string>): string {
   if (!options.jsbundle) {
-    console.error(chalk.red('ERROR: --jsbundle is required when --build-jsbundle is not set.'));
-    process.exit(1);
+    cliError('Missing JS bundle path', [
+      'Provide a pre-built bundle:  --jsbundle <path>',
+      'Or build one automatically:  --build-jsbundle --project-root ./MyApp',
+      '',
+      'Hint: After running Metro, the bundle is usually at:',
+      '  Android → android/app/build/generated/assets/createBundleReleaseJsAndAssets/index.android.bundle',
+      '  iOS     → ios/build/Build/Products/Release-iphonesimulator/main.jsbundle',
+    ]);
   }
   return options.jsbundle;
 }
 
-program
+const MISSING_ARG_HINTS: Record<string, { message: string; hints: string[] }> = {
+  apkPath: {
+    message: 'Missing APK path',
+    hints: [
+      'Usage:  rn-bundle-swapper android <apkPath> [options]',
+      '',
+      'Common APK locations:',
+      '  Debug   → android/app/build/outputs/apk/debug/app-debug.apk',
+      '  Release → android/app/build/outputs/apk/release/app-release.apk',
+    ],
+  },
+  appPath: {
+    message: 'Missing .app path',
+    hints: [
+      'Usage:  rn-bundle-swapper ios-app <appPath> [options]',
+      '',
+      'Common .app locations (Simulator builds):',
+      '  Debug   → ios/build/Build/Products/Debug-iphonesimulator/YourApp.app',
+      '  Release → ios/build/Build/Products/Release-iphonesimulator/YourApp.app',
+    ],
+  },
+  ipaPath: {
+    message: 'Missing .ipa path',
+    hints: [
+      'Usage:  rn-bundle-swapper ios-ipa <ipaPath> [options]',
+      '',
+      'Build an IPA via Xcode Archive or:',
+      '  xcodebuild -exportArchive -archivePath YourApp.xcarchive \\',
+      '    -exportOptionsPlist ExportOptions.plist -exportPath ./build',
+    ],
+  },
+};
+
+function setupMissingArgHint(cmd: Command): void {
+  cmd.configureOutput({
+    outputError: () => { /* suppress Commander's default error/help-after-error — we show our own */ },
+    writeErr: () => { /* suppress showHelpAfterError text */ },
+  });
+  cmd.exitOverride((err) => {
+    const msg = err.message;
+    for (const [arg, info] of Object.entries(MISSING_ARG_HINTS)) {
+      if (msg.includes(`missing required argument '${arg}'`)) {
+        cliError(info.message, info.hints);
+      }
+    }
+    // Re-throw for non-matching errors (e.g. --help, --version)
+    throw err;
+  });
+}
+
+const androidCmd = program
   .command('android <apkPath>')
-  .description('Swap bundle in an APK and re-sign it')
+  .description('Swap bundle in an APK and re-sign it');
+setupMissingArgHint(androidCmd);
+androidCmd
   .option('--jsbundle <path>', 'Path to pre-built JS bundle')
   .option('--build-jsbundle', 'Build JS bundle from project before swapping', false)
   .option('--project-root <path>', 'React Native project root (default: cwd)')
@@ -66,11 +137,38 @@ Examples:
       --keystore my.keystore --ks-pass android --ks-alias myalias
 `)
   .action(async (apkPath, options) => {
-    const missing = ['keystore', 'ksPass', 'ksAlias'].filter((k) => !options[k]);
+    const missingOpts: { key: string; flag: string; hints: string[] }[] = [
+      {
+        key: 'keystore',
+        flag: '--keystore',
+        hints: [
+          'The debug keystore is usually at:  ~/.android/debug.keystore',
+          'For release builds, use the keystore you signed the original APK with.',
+          'List keys:  keytool -list -keystore <path>',
+        ],
+      },
+      {
+        key: 'ksPass',
+        flag: '--ks-pass',
+        hints: [
+          'The default debug keystore password is:  android',
+          'For release, use the password you set when creating the keystore.',
+        ],
+      },
+      {
+        key: 'ksAlias',
+        flag: '--ks-alias',
+        hints: [
+          'The default debug key alias is:  androiddebugkey',
+          'List aliases:  keytool -list -keystore <your.keystore>',
+        ],
+      },
+    ];
+    const missing = missingOpts.filter((o) => !options[o.key]);
     if (missing.length > 0) {
-      const flags = missing.map((k) => `--${k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}`);
-      console.error(chalk.red(`ERROR: missing required option(s): ${flags.join(', ')}`));
-      process.exit(1);
+      const flags = missing.map((o) => o.flag).join(', ');
+      const hints = missing.flatMap((o) => [`${chalk.yellow(o.flag)}`, ...o.hints, '']);
+      cliError(`Missing required option(s): ${flags}`, hints);
     }
 
     let jsBundlePath: string;
@@ -111,9 +209,11 @@ Examples:
     }
   });
 
-program
+const iosAppCmd = program
   .command('ios-app <appPath>')
-  .description('Swap bundle in an iOS .app (Simulator)')
+  .description('Swap bundle in an iOS .app (Simulator)');
+setupMissingArgHint(iosAppCmd);
+iosAppCmd
   .option('--jsbundle <path>', 'Path to pre-built JS bundle')
   .option('--build-jsbundle', 'Build JS bundle from project before swapping', false)
   .option('--project-root <path>', 'React Native project root (default: cwd)')
@@ -163,9 +263,11 @@ Examples:
     }
   });
 
-program
+const iosIpaCmd = program
   .command('ios-ipa <ipaPath>')
-  .description('Swap bundle in an iOS .ipa (Device) and re-sign')
+  .description('Swap bundle in an iOS .ipa (Device) and re-sign');
+setupMissingArgHint(iosIpaCmd);
+iosIpaCmd
   .option('--jsbundle <path>', 'Path to pre-built JS bundle')
   .option('--build-jsbundle', 'Build JS bundle from project before swapping', false)
   .option('--project-root <path>', 'React Native project root (default: cwd)')
@@ -189,8 +291,15 @@ Examples:
 `)
   .action(async (ipaPath, options) => {
     if (!options.identity) {
-      console.error(chalk.red('ERROR: missing required option: --identity'));
-      process.exit(1);
+      cliError('Missing required option: --identity', [
+        'Provide the codesign identity used to sign the original IPA.',
+        '',
+        'List available identities:',
+        '  security find-identity -v -p codesigning',
+        '',
+        'Example:',
+        '  --identity "Apple Distribution: Your Company (TEAMID)"',
+      ]);
     }
 
     let jsBundlePath: string;
@@ -267,7 +376,11 @@ const ALLOWED_CONFIG_KEYS = new Set([
           }
         });
         newArgs.push(...argv.slice(configIndex + 2));
-        program.parse(newArgs);
+        try {
+          program.parse(newArgs);
+        } catch {
+          process.exit(0);
+        }
       } catch (err) {
         console.error(chalk.red(`Failed to read config at ${configPath}: ${(err as Error).message}`));
         process.exit(1);
@@ -277,6 +390,11 @@ const ALLOWED_CONFIG_KEYS = new Set([
       process.exit(1);
     }
   } else {
-    program.parse(argv);
+    try {
+      program.parse(argv);
+    } catch {
+      // exitOverride throws for --help/--version; those are already handled
+      process.exit(0);
+    }
   }
 })();
