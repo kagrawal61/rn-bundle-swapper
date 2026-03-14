@@ -21,7 +21,7 @@
     "CHANGELOG.md"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "keywords": [
     "react-native",
@@ -64,11 +64,11 @@
   "dependencies": {
     "adm-zip": "^0.5.10",
     "boxen": "^7.0.0",
-    "chalk": "^5.3.0",
+    "chalk": "^5.6.2",
     "commander": "^11.0.0",
     "execa": "^8.0.0",
     "figlet": "^1.7.0",
-    "fs-extra": "^11.1.1",
+    "fs-extra": "^11.3.4",
     "gradient-string": "^2.0.2",
     "log-symbols": "^5.1.0",
     "ora": "^7.0.1"
@@ -86,9 +86,9 @@
     "eslint-config-prettier": "^10.1.8",
     "husky": "^8.0.3",
     "jest": "^29.7.0",
-    "prettier": "^3.2.4",
-    "ts-jest": "^29.0.5",
+    "prettier": "^3.8.1",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.9.3"
   }
 }

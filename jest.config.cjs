@@ -4,7 +4,7 @@ module.exports = {
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': ['ts-jest', { diagnostics: { ignoreCodes: [151002] } }],
   },
   // Strip .js extensions from relative imports so ts-jest resolves .ts sources
   moduleNameMapper: {

@@ -10,7 +10,7 @@
 [![npm downloads](https://img.shields.io/npm/dw/rn-bundle-swapper.svg)](https://www.npmjs.com/package/rn-bundle-swapper)
 [![CI](https://github.com/kagrawal61/rn-bundle-swapper/actions/workflows/ci.yml/badge.svg)](https://github.com/kagrawal61/rn-bundle-swapper/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Node.js ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
+[![Node.js ≥ 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
 </p>
 
@@ -160,7 +160,7 @@ yarn add --dev rn-bundle-swapper
 | Android  | Android SDK Build-Tools: `zipalign`, `apksigner` |
 | iOS `.app` | Nothing extra (Simulator builds don't need signing) |
 | iOS `.ipa` | Xcode Command Line Tools: `codesign`, `unzip`, `zip` |
-| All | Node.js ≥ 18 |
+| All | Node.js ≥ 20 |
 
 **Installing Android SDK Build-Tools:**
 ```sh
