@@ -20,7 +20,7 @@ Thank you for your interest in contributing! This document covers how to get the
 
 **Prerequisites**
 
-- Node.js ≥ 18 (use [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm) to manage versions)
+- Node.js ≥ 20 (use [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm) to manage versions)
 - Yarn (`npm install -g yarn`)
 - Android SDK Build-Tools (`zipalign`, `apksigner`) — for Android tests
 - Xcode Command Line Tools — for iOS tests on macOS
