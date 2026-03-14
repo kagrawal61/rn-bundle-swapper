@@ -100,24 +100,50 @@ The resulting binary **behaves identically** to a full build with the same JS bu
 
 ---
 
-## When to use this
+## Use cases
 
-**QA and internal testing**
+### QA and internal testing
 Distribute a base APK/IPA to your QA team once. When a bug is fixed or a feature is ready, swap only the bundle — QA can re-test in seconds without reinstalling a new native build.
 
-**CI/CD pipelines**
+### CI/CD pipelines
 Build native binaries once per week (or per native change). Run JS-only patch pipelines on every PR. Dramatically reduce CI minutes and queue time.
 
-**Parallel JS development**
+```
+┌─ Weekly: full native build ──────────────────────────┐
+│  Gradle/Xcode → APK/IPA → store in artifact cache   │
+└──────────────────────────────────────────────────────┘
+
+┌─ Every PR: JS-only patch (seconds) ─────────────────┐
+│  Metro bundle → rn-bundle-swapper → patched APK/IPA │
+│  → deploy to test devices / run E2E tests            │
+└──────────────────────────────────────────────────────┘
+```
+
+### Parallel JS development
 Multiple developers can test different JS branches against the same stable native binary without each waiting for a native build.
 
-**Hot-fix validation**
+### Hot-fix validation
 Validate a critical JS fix on a device before going through a full release cycle.
 
-**Not a fit for:**
-- Play Store / App Store submissions (always use a proper signed build)
-- Changes that touch native modules or native configuration
-- OTA production updates (use CodePush / Expo Updates for that)
+### A/B testing JS changes
+Produce multiple APKs/IPAs with different JS bundles from the same native build. Distribute them to different test groups to compare behaviour or performance.
+
+### Regression testing across JS versions
+Keep a stable native binary and swap in JS bundles from different commits or branches. Quickly bisect which JS change introduced a regression — without rebuilding native code each time.
+
+### Demo and stakeholder builds
+Generate quick demo builds for product reviews or stakeholder demos. Swap in the latest JS without waiting for a full build pipeline.
+
+### Offline / air-gapped environments
+Pre-build the native binary on a machine with full toolchain access. Then swap JS bundles on machines that only have Node.js — no Android SDK or Xcode needed for the swap step.
+
+---
+
+### Not a fit for
+
+- **Play Store / App Store submissions** — always use a proper signed build from your full pipeline
+- **Changes that touch native modules** or native configuration
+- **OTA production updates** — use CodePush / Expo Updates for that
 
 ---
 
