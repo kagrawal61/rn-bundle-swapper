@@ -20,6 +20,10 @@
 
 > ⚠️ Intended for **internal distribution, QA, and CI workflows** — not for Play Store or App Store submissions.
 
+<p align="center">
+  <img src="img/demo.gif" alt="rn-bundle-swapper demo" width="720" />
+</p>
+
 ---
 
 ## The problem
