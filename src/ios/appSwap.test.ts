@@ -6,8 +6,12 @@ jest.mock('../utils/logger', () => ({
     spinner: jest.fn(() => ({ succeed: jest.fn(), fail: jest.fn() })),
   },
 }));
+jest.mock('../utils/iosAssets', () => ({
+  copyIosAssets: jest.fn().mockResolvedValue(undefined),
+}));
 
 import fs from 'fs-extra';
+import { copyIosAssets as copyIosAssetsMock } from '../utils/iosAssets.js';
 import { swapIosApp } from './appSwap.js';
 
 const mockExistsSync = fs.existsSync as unknown as jest.Mock;
@@ -15,6 +19,7 @@ const mockPathExists = fs.pathExists as unknown as jest.Mock;
 const mockRemove = fs.remove as unknown as jest.Mock;
 const mockCopy = fs.copy as unknown as jest.Mock;
 const mockCopyFile = fs.copyFile as unknown as jest.Mock;
+const mockCopyIosAssets = copyIosAssetsMock as unknown as jest.Mock;
 
 const baseOpts = {
   appPath: 'MyApp.app',
@@ -82,30 +87,16 @@ describe('swapIosApp', () => {
   });
 
   describe('asset copying', () => {
-    it('copies assets when copyAssets is true and a candidate dir is found', async () => {
-      // Simulate the first candidate assets dir being found
-      mockPathExists.mockImplementation(async (p: string) => p.endsWith('assets'));
-
+    it('calls copyIosAssets when copyAssets is true', async () => {
       await swapIosApp({ ...baseOpts, copyAssets: true });
 
-      // copy is called twice: once for .app dir, once for assets
-      expect(mockCopy).toHaveBeenCalledTimes(2);
-    });
-
-    it('warns when copyAssets is true but no assets directory is found', async () => {
-      const { logger: log } = jest.requireMock('../utils/logger');
-      mockPathExists.mockResolvedValue(false);
-
-      await swapIosApp({ ...baseOpts, copyAssets: true });
-
-      expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('No assets directory'));
+      expect(mockCopyIosAssets).toHaveBeenCalledWith('main.jsbundle', 'Patched.app');
     });
 
     it('skips asset copying when copyAssets is false', async () => {
       await swapIosApp({ ...baseOpts, copyAssets: false });
 
-      // Only one copy call: the .app dir
-      expect(mockCopy).toHaveBeenCalledTimes(1);
+      expect(mockCopyIosAssets).not.toHaveBeenCalled();
     });
   });
 });

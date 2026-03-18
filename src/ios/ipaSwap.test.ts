@@ -15,6 +15,9 @@ jest.mock('../utils/logger', () => ({
     spinner: jest.fn(() => ({ succeed: jest.fn(), fail: jest.fn() })),
   },
 }));
+jest.mock('../utils/iosAssets', () => ({
+  copyIosAssets: jest.fn().mockResolvedValue(undefined),
+}));
 
 import { execa as execaMock } from 'execa';
 import fs from 'fs-extra';

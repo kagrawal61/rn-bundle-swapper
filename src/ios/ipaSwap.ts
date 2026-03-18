@@ -5,6 +5,7 @@ import { mkdtempSync } from 'fs';
 import { execa } from 'execa';
 import { IosIpaSwapOptions } from '../index.js';
 import { logger } from '../utils/logger.js';
+import { copyIosAssets } from '../utils/iosAssets.js';
 
 function assertExists(p: string, label: string) {
   if (!fs.existsSync(p)) {
@@ -48,31 +49,7 @@ export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
     await fs.copyFile(jsBundlePath, destBundle);
 
     if (copyAssets) {
-      const bundleDir = path.dirname(jsBundlePath);
-      const parentDir = path.dirname(bundleDir);
-
-      const candidateDirs = [
-        path.join(bundleDir, 'assets'),
-        path.join(parentDir, 'assets'),
-        path.join(parentDir, 'ios', 'assets'),
-      ];
-
-      logger.info('Looking for iOS assets...');
-
-      let found = false;
-      for (const srcAssets of candidateDirs) {
-        if (await fs.pathExists(srcAssets)) {
-          const destAssets = path.join(appPath, 'assets');
-          logger.info(`Copying assets: ${srcAssets} → ${destAssets}`);
-          await fs.copy(srcAssets, destAssets);
-          found = true;
-          break;
-        }
-      }
-
-      if (!found) {
-        logger.warn('No assets directory found in any expected location');
-      }
+      await copyIosAssets(jsBundlePath, appPath);
     }
 
     // Re-sign .app bundle
