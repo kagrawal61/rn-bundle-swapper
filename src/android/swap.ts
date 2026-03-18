@@ -6,12 +6,7 @@ import { logger } from '../utils/logger.js';
 import path from 'path';
 import { AndroidSwapOptions } from '../index.js';
 import { addDirToZip } from '../utils/zip.js';
-
-function assertFileExists(p: string, label: string) {
-  if (!fs.existsSync(p)) {
-    throw new Error(`${label} not found at path: ${p}`);
-  }
-}
+import { assertExists } from '../utils/validate.js';
 
 /**
  * Replace JS bundle in an APK and re-sign it.
@@ -28,9 +23,9 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
     copyAssets = true,
   } = opts;
 
-  assertFileExists(apkPath, 'APK');
-  assertFileExists(jsBundlePath, 'JS bundle');
-  assertFileExists(keystorePath, 'Keystore');
+  assertExists(apkPath, 'APK');
+  assertExists(jsBundlePath, 'JS bundle');
+  assertExists(keystorePath, 'Keystore');
 
   // Load APK
   const zip = new AdmZip(apkPath);

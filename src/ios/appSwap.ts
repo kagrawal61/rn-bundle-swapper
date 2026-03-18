@@ -2,12 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { IosAppSwapOptions } from '../index.js';
 import { logger } from '../utils/logger.js';
-
-function assertExists(p: string, label: string) {
-  if (!fs.existsSync(p)) {
-    throw new Error(`${label} not found at path: ${p}`);
-  }
-}
+import { assertExists } from '../utils/validate.js';
 
 /**
  * Swap JS bundle inside an unzipped .app bundle (Simulator build).

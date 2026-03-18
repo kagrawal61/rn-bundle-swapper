@@ -8,6 +8,9 @@ jest.mock('os', () => ({
 }));
 jest.mock('execa', () => ({ execa: jest.fn().mockResolvedValue({}) }));
 jest.mock('fs-extra');
+jest.mock('../utils/validate', () => ({
+  assertExists: jest.fn(),
+}));
 jest.mock('../utils/logger', () => ({
   logger: {
     info: jest.fn(),
@@ -18,10 +21,12 @@ jest.mock('../utils/logger', () => ({
 
 import { execa as execaMock } from 'execa';
 import fs from 'fs-extra';
+import { assertExists as assertExistsMock } from '../utils/validate.js';
 import { swapIosIpa } from './ipaSwap.js';
 
 const mockExeca = execaMock as unknown as jest.Mock;
 const mockExistsSync = fs.existsSync as unknown as jest.Mock;
+const mockAssertExists = assertExistsMock as unknown as jest.Mock;
 const mockPathExists = fs.pathExists as unknown as jest.Mock;
 const mockReaddir = fs.readdir as unknown as jest.Mock;
 const mockCopyFile = fs.copyFile as unknown as jest.Mock;
@@ -43,6 +48,11 @@ describe('swapIosIpa', () => {
     jest.clearAllMocks();
     // Re-apply default execa behavior to override any mockImplementation from prior tests
     mockExeca.mockResolvedValue({});
+    mockAssertExists.mockImplementation((p: string, label: string) => {
+      if (!mockExistsSync(p)) {
+        throw new Error(`${label} not found at path: ${p}`);
+      }
+    });
     mockExistsSync.mockReturnValue(true);
     mockPathExists.mockResolvedValue(true);
     mockReaddir.mockResolvedValue(['MyApp.app']);
