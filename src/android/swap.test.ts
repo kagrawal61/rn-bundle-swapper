@@ -1,6 +1,9 @@
 jest.mock('execa', () => ({ execa: jest.fn().mockResolvedValue({}) }));
 jest.mock('adm-zip');
 jest.mock('fs-extra');
+jest.mock('../utils/validate', () => ({
+  assertExists: jest.fn(),
+}));
 jest.mock('../utils/logger', () => ({
   logger: {
     info: jest.fn(),
@@ -18,6 +21,7 @@ jest.mock('../utils/zip', () => ({
 import { execa as execaMock } from 'execa';
 import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
+import { assertExists as assertExistsMock } from '../utils/validate.js';
 import { swapAndroid } from './swap.js';
 
 const mockExeca = execaMock as unknown as jest.Mock;
@@ -26,6 +30,7 @@ const mockReadFile = fs.readFile as unknown as jest.Mock;
 const mockRemove = fs.remove as unknown as jest.Mock;
 const mockPathExists = fs.pathExists as unknown as jest.Mock;
 const MockAdmZip = AdmZip as jest.MockedClass<typeof AdmZip>;
+const mockAssertExists = assertExistsMock as unknown as jest.Mock;
 
 const baseOpts = {
   apkPath: 'app.apk',
@@ -54,6 +59,11 @@ describe('swapAndroid', () => {
     mockZipInstance = makeMockZip();
     MockAdmZip.mockImplementation(() => mockZipInstance as unknown as AdmZip);
 
+    mockAssertExists.mockImplementation((p: string, label: string) => {
+      if (!mockExistsSync(p)) {
+        throw new Error(`${label} not found at path: ${p}`);
+      }
+    });
     mockExistsSync.mockReturnValue(true);
     mockReadFile.mockResolvedValue(Buffer.from('bundle content'));
     mockRemove.mockResolvedValue(undefined);

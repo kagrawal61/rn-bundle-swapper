@@ -1,4 +1,7 @@
 jest.mock('fs-extra');
+jest.mock('../utils/validate', () => ({
+  assertExists: jest.fn(),
+}));
 jest.mock('../utils/logger', () => ({
   logger: {
     info: jest.fn(),
@@ -8,9 +11,11 @@ jest.mock('../utils/logger', () => ({
 }));
 
 import fs from 'fs-extra';
+import { assertExists as assertExistsMock } from '../utils/validate.js';
 import { swapIosApp } from './appSwap.js';
 
 const mockExistsSync = fs.existsSync as unknown as jest.Mock;
+const mockAssertExists = assertExistsMock as unknown as jest.Mock;
 const mockPathExists = fs.pathExists as unknown as jest.Mock;
 const mockRemove = fs.remove as unknown as jest.Mock;
 const mockCopy = fs.copy as unknown as jest.Mock;
@@ -26,6 +31,11 @@ const baseOpts = {
 describe('swapIosApp', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAssertExists.mockImplementation((p: string, label: string) => {
+      if (!mockExistsSync(p)) {
+        throw new Error(`${label} not found at path: ${p}`);
+      }
+    });
     mockExistsSync.mockReturnValue(true);
     mockPathExists.mockResolvedValue(false);
     mockRemove.mockResolvedValue(undefined);

@@ -5,12 +5,7 @@ import { mkdtempSync } from 'fs';
 import { execa } from 'execa';
 import { IosIpaSwapOptions } from '../index.js';
 import { logger } from '../utils/logger.js';
-
-function assertExists(p: string, label: string) {
-  if (!fs.existsSync(p)) {
-    throw new Error(`${label} not found at path: ${p}`);
-  }
-}
+import { assertExists } from '../utils/validate.js';
 
 /**
  * Replace JS bundle inside IPA and re-sign.
