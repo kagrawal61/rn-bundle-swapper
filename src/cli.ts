@@ -2,6 +2,7 @@ import { createRequire } from 'module';
 import { Command } from 'commander';
 import { swapAndroid, swapIosApp, swapIosIpa } from './index.js';
 import { buildBundle } from './utils/bundle.js';
+import { loadConfigFlags } from './utils/config.js';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import { showBanner, BannerStyle } from './utils/logger.js';
@@ -340,53 +341,22 @@ Examples:
 // Support JSON config file as --config <file.json>
 program.option('--config <path>', 'Path to JSON config file with arguments');
 
-/**
- * Allowed keys in a JSON config file. Validated before injection into argv to
- * prevent untrusted config files from injecting arbitrary flags.
- */
-const ALLOWED_CONFIG_KEYS = new Set([
-  // Shared
-  'jsbundle', 'build-jsbundle', 'project-root', 'no-hermes', 'copy-assets', 'no-copy-assets', 'output',
-  // Android
-  'keystore', 'ks-pass', 'ks-alias', 'key-pass',
-  // iOS IPA
-  'identity', 'ci',
-]);
-
 // Config file preprocessing: inject JSON keys as CLI flags before Commander parses.
 (async () => {
   const argv = process.argv;
   const configIndex = argv.indexOf('--config');
   if (configIndex !== -1 && argv.length > configIndex + 1) {
     const configPath = argv[configIndex + 1];
-    if (fs.existsSync(configPath)) {
+    try {
+      const flags = await loadConfigFlags(configPath);
+      const newArgs = [...argv.slice(0, 2), ...flags, ...argv.slice(configIndex + 2)];
       try {
-        const configContent = await fs.readJson(configPath);
-        const unknownKeys = Object.keys(configContent).filter((k) => !ALLOWED_CONFIG_KEYS.has(k));
-        if (unknownKeys.length > 0) {
-          console.error(chalk.red(`Unknown config key(s): ${unknownKeys.join(', ')}`));
-          console.error(chalk.gray(`Allowed keys: ${[...ALLOWED_CONFIG_KEYS].join(', ')}`));
-          process.exit(1);
-        }
-        const newArgs = [...argv.slice(0, 2)];
-        Object.entries(configContent).forEach(([key, value]) => {
-          newArgs.push(`--${key}`);
-          if (typeof value !== 'boolean') {
-            newArgs.push(String(value));
-          }
-        });
-        newArgs.push(...argv.slice(configIndex + 2));
-        try {
-          program.parse(newArgs);
-        } catch {
-          process.exit(0);
-        }
-      } catch (err) {
-        console.error(chalk.red(`Failed to read config at ${configPath}: ${(err as Error).message}`));
-        process.exit(1);
+        program.parse(newArgs);
+      } catch {
+        process.exit(0);
       }
-    } else {
-      console.error(chalk.red(`Config file not found at ${configPath}`));
+    } catch (err) {
+      console.error(chalk.red((err as Error).message));
       process.exit(1);
     }
   } else {
