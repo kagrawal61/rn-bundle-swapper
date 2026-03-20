@@ -117,6 +117,21 @@ describe('swapAndroid', () => {
 
       expect(mockZipInstance.deleteFile).not.toHaveBeenCalled();
     });
+
+    it('uses a custom bundleEntry path when provided', async () => {
+      const customBundleEntry = 'assets/custom.android.bundle';
+
+      await swapAndroid({ ...baseOpts, bundleEntry: customBundleEntry });
+
+      expect(mockZipInstance.addFile).toHaveBeenCalledWith(
+        customBundleEntry,
+        expect.any(Buffer)
+      );
+      expect(mockZipInstance.addFile).not.toHaveBeenCalledWith(
+        'assets/index.android.bundle',
+        expect.anything()
+      );
+    });
   });
 
   describe('zipalign', () => {
