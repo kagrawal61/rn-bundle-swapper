@@ -44,6 +44,7 @@ yarn type-check     # type-check without emitting
 
 ```sh
 yarn lint           # ESLint
+yarn format:check   # Prettier format check (read-only)
 ```
 
 **Tests**
@@ -55,7 +56,7 @@ yarn test           # Jest
 **All checks at once**
 
 ```sh
-yarn check          # lint + type-check + test
+yarn check          # lint + type-check + format:check + test
 ```
 
 **Sample app (optional, for end-to-end testing)**
@@ -79,8 +80,10 @@ src/
     ipaSwap.ts        — .ipa bundle swap + codesign + repack
   utils/
     bundle.ts         — react-native bundle + hermesc compilation
+    config.ts         — --config JSON file loader and flag injector
     logger.ts         — CLI logger and banner
     temp.ts           — OS temp directory helper
+    validate.ts       — Shared assertExists path validation helper
     zip.ts            — Recursive directory-to-zip helper
 ```
 
