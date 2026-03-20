@@ -9,4 +9,4 @@ import { randomBytes } from 'crypto';
 export function tmpPath(name: string): string {
   const dir = mkdtempSync(join(tmpdir(), 'rnbundleswapper-'));
   return join(dir, `${randomBytes(4).toString('hex')}-${name}`);
-} 
+}

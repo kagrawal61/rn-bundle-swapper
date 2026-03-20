@@ -41,9 +41,9 @@ describe('buildBundle', () => {
   describe('input validation', () => {
     it('throws when the project root does not exist', async () => {
       mockExistsSync.mockReturnValue(false);
-      await expect(
-        buildBundle({ projectRoot: '/missing', platform: 'android' })
-      ).rejects.toThrow('Project root not found');
+      await expect(buildBundle({ projectRoot: '/missing', platform: 'android' })).rejects.toThrow(
+        'Project root not found',
+      );
     });
   });
 
@@ -55,10 +55,12 @@ describe('buildBundle', () => {
         'react-native',
         expect.arrayContaining([
           'bundle',
-          '--platform', 'android',
-          '--bundle-output', expect.stringContaining('index.android.bundle'),
+          '--platform',
+          'android',
+          '--bundle-output',
+          expect.stringContaining('index.android.bundle'),
         ]),
-        expect.objectContaining({ cwd: '/project' })
+        expect.objectContaining({ cwd: '/project' }),
       );
     });
 
@@ -68,13 +70,13 @@ describe('buildBundle', () => {
       expect(mockExeca).toHaveBeenCalledWith(
         'react-native',
         expect.arrayContaining(['--bundle-output', expect.stringContaining('main.jsbundle')]),
-        expect.anything()
+        expect.anything(),
       );
     });
 
     it('prefers the local react-native binary when available', async () => {
-      mockExistsSync.mockImplementation((p: string) =>
-        p === '/project' || String(p).endsWith('react-native')
+      mockExistsSync.mockImplementation(
+        (p: string) => p === '/project' || String(p).endsWith('react-native'),
       );
 
       await buildBundle({ projectRoot: '/project', platform: 'android', hermes: false });
@@ -98,7 +100,7 @@ describe('buildBundle', () => {
       expect(mockExeca).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['--reset-cache']),
-        expect.anything()
+        expect.anything(),
       );
     });
 
@@ -106,7 +108,7 @@ describe('buildBundle', () => {
       mockExeca.mockRejectedValueOnce(new Error('Metro error'));
 
       await expect(
-        buildBundle({ projectRoot: '/project', platform: 'android', hermes: false })
+        buildBundle({ projectRoot: '/project', platform: 'android', hermes: false }),
       ).rejects.toThrow('Metro error');
 
       expect(mockRemove).toHaveBeenCalledWith(OUT_DIR);
@@ -123,7 +125,7 @@ describe('buildBundle', () => {
       await buildBundle({ projectRoot: '/project', platform: 'android', hermes: true });
 
       const hermesCall = mockExeca.mock.calls.find(([cmd]: [string]) =>
-        String(cmd).endsWith('hermesc')
+        String(cmd).endsWith('hermesc'),
       );
       expect(hermesCall).toBeDefined();
       expect(hermesCall[1]).toContain('-emit-binary');
@@ -133,7 +135,7 @@ describe('buildBundle', () => {
       await buildBundle({ projectRoot: '/project', platform: 'android', hermes: false });
 
       const hermesCalls = mockExeca.mock.calls.filter(([cmd]: [string]) =>
-        String(cmd).endsWith('hermesc')
+        String(cmd).endsWith('hermesc'),
       );
       expect(hermesCalls).toHaveLength(0);
     });
@@ -142,14 +144,22 @@ describe('buildBundle', () => {
       const { logger: log } = jest.requireMock('./logger');
       mockExistsSync.mockImplementation((p: string) => p === '/project');
 
-      const result = await buildBundle({ projectRoot: '/project', platform: 'android', hermes: true });
+      const result = await buildBundle({
+        projectRoot: '/project',
+        platform: 'android',
+        hermes: true,
+      });
 
       expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('hermesc not found'));
       expect(result.bundlePath).toBeDefined();
     });
 
     it('returns bundlePath, assetsDir, and outDir', async () => {
-      const result = await buildBundle({ projectRoot: '/project', platform: 'android', hermes: false });
+      const result = await buildBundle({
+        projectRoot: '/project',
+        platform: 'android',
+        hermes: false,
+      });
 
       expect(result.bundlePath).toContain('index.android.bundle');
       expect(result.assetsDir).toContain('assets');

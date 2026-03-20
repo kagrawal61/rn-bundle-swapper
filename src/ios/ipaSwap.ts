@@ -11,7 +11,15 @@ import { assertExists } from '../utils/validate.js';
  * Replace JS bundle inside IPA and re-sign.
  */
 export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
-  const { ipaPath, jsBundlePath, outputPath, identity, ci, copyAssets = true, bundleName = 'main.jsbundle' } = opts;
+  const {
+    ipaPath,
+    jsBundlePath,
+    outputPath,
+    identity,
+    ci,
+    copyAssets = true,
+    bundleName = 'main.jsbundle',
+  } = opts;
 
   assertExists(ipaPath, 'IPA');
   assertExists(jsBundlePath, 'JS bundle');
@@ -89,7 +97,9 @@ export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
     } catch (e) {
       signSpinner.fail('codesign failed');
       if (ci) {
-        throw new Error('Codesign failed in CI mode. Ensure the identity is available in the keychain.');
+        throw new Error(
+          'Codesign failed in CI mode. Ensure the identity is available in the keychain.',
+        );
       }
       throw e;
     }

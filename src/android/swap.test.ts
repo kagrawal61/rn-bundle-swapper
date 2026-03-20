@@ -78,15 +78,15 @@ describe('swapAndroid', () => {
 
     it('throws when the JS bundle file does not exist', async () => {
       mockExistsSync
-        .mockReturnValueOnce(true)   // APK exists
+        .mockReturnValueOnce(true) // APK exists
         .mockReturnValueOnce(false); // bundle missing
       await expect(swapAndroid(baseOpts)).rejects.toThrow('JS bundle not found');
     });
 
     it('throws when the keystore file does not exist', async () => {
       mockExistsSync
-        .mockReturnValueOnce(true)   // APK
-        .mockReturnValueOnce(true)   // bundle
+        .mockReturnValueOnce(true) // APK
+        .mockReturnValueOnce(true) // bundle
         .mockReturnValueOnce(false); // keystore missing
       await expect(swapAndroid(baseOpts)).rejects.toThrow('Keystore not found');
     });
@@ -97,7 +97,7 @@ describe('swapAndroid', () => {
       await swapAndroid(baseOpts);
       expect(mockZipInstance.addFile).toHaveBeenCalledWith(
         'assets/index.android.bundle',
-        expect.any(Buffer)
+        expect.any(Buffer),
       );
     });
 
@@ -123,13 +123,10 @@ describe('swapAndroid', () => {
 
       await swapAndroid({ ...baseOpts, bundleEntry: customBundleEntry });
 
-      expect(mockZipInstance.addFile).toHaveBeenCalledWith(
-        customBundleEntry,
-        expect.any(Buffer)
-      );
+      expect(mockZipInstance.addFile).toHaveBeenCalledWith(customBundleEntry, expect.any(Buffer));
       expect(mockZipInstance.addFile).not.toHaveBeenCalledWith(
         'assets/index.android.bundle',
-        expect.anything()
+        expect.anything(),
       );
     });
   });
@@ -137,10 +134,7 @@ describe('swapAndroid', () => {
   describe('zipalign', () => {
     it('calls zipalign with -p -f 4 flags', async () => {
       await swapAndroid(baseOpts);
-      expect(mockExeca).toHaveBeenCalledWith(
-        'zipalign',
-        expect.arrayContaining(['-p', '-f', '4'])
-      );
+      expect(mockExeca).toHaveBeenCalledWith('zipalign', expect.arrayContaining(['-p', '-f', '4']));
     });
   });
 
@@ -151,19 +145,20 @@ describe('swapAndroid', () => {
         'apksigner',
         expect.arrayContaining([
           'sign',
-          '--v2-signing-enabled', 'true',
-          '--v3-signing-enabled', 'false',
-          '--v4-signing-enabled', 'true',
+          '--v2-signing-enabled',
+          'true',
+          '--v3-signing-enabled',
+          'false',
+          '--v4-signing-enabled',
+          'true',
         ]),
-        expect.anything()
+        expect.anything(),
       );
     });
 
     it('passes keystore password via env var, not as a CLI argument', async () => {
       await swapAndroid(baseOpts);
-      const apksignerCall = mockExeca.mock.calls.find(
-        ([cmd]: [string]) => cmd === 'apksigner'
-      );
+      const apksignerCall = mockExeca.mock.calls.find(([cmd]: [string]) => cmd === 'apksigner');
       const [, args, opts] = apksignerCall;
       expect(args).toContain('env:RNBS_KS_PASS');
       expect(args).not.toContain('kspass');
@@ -172,9 +167,7 @@ describe('swapAndroid', () => {
 
     it('passes key password via env var when provided', async () => {
       await swapAndroid({ ...baseOpts, keyPassword: 'keypass' });
-      const apksignerCall = mockExeca.mock.calls.find(
-        ([cmd]: [string]) => cmd === 'apksigner'
-      );
+      const apksignerCall = mockExeca.mock.calls.find(([cmd]: [string]) => cmd === 'apksigner');
       const [, args, opts] = apksignerCall;
       expect(args).toContain('env:RNBS_KEY_PASS');
       expect(args).not.toContain('keypass');
@@ -183,9 +176,7 @@ describe('swapAndroid', () => {
 
     it('omits --key-pass when keyPassword is not provided', async () => {
       await swapAndroid(baseOpts);
-      const apksignerCall = mockExeca.mock.calls.find(
-        ([cmd]: [string]) => cmd === 'apksigner'
-      );
+      const apksignerCall = mockExeca.mock.calls.find(([cmd]: [string]) => cmd === 'apksigner');
       expect(apksignerCall[1]).not.toContain('--key-pass');
     });
   });

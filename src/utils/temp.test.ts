@@ -29,9 +29,7 @@ describe('tmpPath', () => {
 
   it('calls mkdtempSync with a prefix containing rnbundleswapper', () => {
     tmpPath('test.apk');
-    expect(mockMkdtemp).toHaveBeenCalledWith(
-      expect.stringContaining('rnbundleswapper')
-    );
+    expect(mockMkdtemp).toHaveBeenCalledWith(expect.stringContaining('rnbundleswapper'));
   });
 
   it('prepends a hex prefix to the name for uniqueness', () => {

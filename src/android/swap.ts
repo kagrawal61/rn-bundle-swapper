@@ -123,9 +123,12 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
     //       --ks-key-alias <alias>, [--key-pass env:<var>,] --out <out>, <input>
     const signArgs = [
       'sign',
-      '--v2-signing-enabled', 'true',
-      '--v3-signing-enabled', 'false',
-      '--v4-signing-enabled', 'true',
+      '--v2-signing-enabled',
+      'true',
+      '--v3-signing-enabled',
+      'false',
+      '--v4-signing-enabled',
+      'true',
       '--ks',
       keystorePath,
       '--ks-pass',

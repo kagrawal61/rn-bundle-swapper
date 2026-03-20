@@ -15,7 +15,7 @@ describe('loadConfigFlags', () => {
     mockExistsSync.mockReturnValue(false);
 
     await expect(loadConfigFlags('/path/to/missing.json')).rejects.toThrow(
-      'Config file not found at /path/to/missing.json'
+      'Config file not found at /path/to/missing.json',
     );
   });
 
@@ -24,7 +24,7 @@ describe('loadConfigFlags', () => {
     mockReadJson.mockRejectedValue(new SyntaxError('Unexpected token'));
 
     await expect(loadConfigFlags('/path/to/bad.json')).rejects.toThrow(
-      'Failed to read config at /path/to/bad.json'
+      'Failed to read config at /path/to/bad.json',
     );
   });
 
@@ -33,7 +33,7 @@ describe('loadConfigFlags', () => {
     mockReadJson.mockResolvedValue({ jsbundle: 'bundle.js', 'evil-flag': true });
 
     await expect(loadConfigFlags('/path/to/config.json')).rejects.toThrow(
-      'Unknown config key(s): evil-flag'
+      'Unknown config key(s): evil-flag',
     );
   });
 
@@ -42,7 +42,7 @@ describe('loadConfigFlags', () => {
     mockReadJson.mockResolvedValue({ foo: 'a', bar: 'b' });
 
     await expect(loadConfigFlags('/path/to/config.json')).rejects.toThrow(
-      'Unknown config key(s): foo, bar'
+      'Unknown config key(s): foo, bar',
     );
   });
 
@@ -75,9 +75,11 @@ describe('loadConfigFlags', () => {
     const flags = await loadConfigFlags('/path/to/config.json');
 
     expect(flags).toEqual([
-      '--jsbundle', 'main.jsbundle',
+      '--jsbundle',
+      'main.jsbundle',
       '--copy-assets',
-      '--identity', 'Apple Distribution: Test',
+      '--identity',
+      'Apple Distribution: Test',
     ]);
   });
 

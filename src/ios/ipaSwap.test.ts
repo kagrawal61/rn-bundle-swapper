@@ -69,14 +69,14 @@ describe('swapIosIpa', () => {
 
     it('throws when the JS bundle does not exist', async () => {
       mockExistsSync
-        .mockReturnValueOnce(true)   // IPA exists
+        .mockReturnValueOnce(true) // IPA exists
         .mockReturnValueOnce(false); // bundle missing
       await expect(swapIosIpa(baseOpts)).rejects.toThrow('JS bundle not found');
     });
 
     it('throws when identity is empty', async () => {
       await expect(swapIosIpa({ ...baseOpts, identity: '' })).rejects.toThrow(
-        'Codesign identity is required'
+        'Codesign identity is required',
       );
     });
 
@@ -97,7 +97,7 @@ describe('swapIosIpa', () => {
       await swapIosIpa(baseOpts);
       expect(mockExeca).toHaveBeenCalledWith(
         'unzip',
-        expect.arrayContaining(['-q', 'MyApp.ipa', '-d', WORK_DIR])
+        expect.arrayContaining(['-q', 'MyApp.ipa', '-d', WORK_DIR]),
       );
     });
   });
@@ -107,7 +107,7 @@ describe('swapIosIpa', () => {
       await swapIosIpa(baseOpts);
       expect(mockCopyFile).toHaveBeenCalledWith(
         'main.jsbundle',
-        expect.stringContaining('main.jsbundle')
+        expect.stringContaining('main.jsbundle'),
       );
     });
 
@@ -115,7 +115,7 @@ describe('swapIosIpa', () => {
       await swapIosIpa({ ...baseOpts, bundleName: 'custom.jsbundle' });
       expect(mockCopyFile).toHaveBeenCalledWith(
         'main.jsbundle',
-        expect.stringContaining('custom.jsbundle')
+        expect.stringContaining('custom.jsbundle'),
       );
     });
   });
@@ -143,7 +143,7 @@ describe('swapIosIpa', () => {
       });
 
       await expect(swapIosIpa({ ...baseOpts, ci: true })).rejects.toThrow(
-        'Codesign failed in CI mode'
+        'Codesign failed in CI mode',
       );
     });
 
@@ -163,7 +163,7 @@ describe('swapIosIpa', () => {
       expect(mockExeca).toHaveBeenCalledWith(
         'zip',
         expect.arrayContaining(['-qr', expect.stringContaining('Patched.ipa'), 'Payload']),
-        expect.objectContaining({ cwd: WORK_DIR })
+        expect.objectContaining({ cwd: WORK_DIR }),
       );
     });
   });

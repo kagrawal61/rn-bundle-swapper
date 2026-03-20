@@ -29,11 +29,7 @@ function renderCompactBanner(name: string, version: string): void {
   console.log(boxed);
 }
 
-export function showBanner(
-  name: string,
-  version: string,
-  style: BannerStyle = 'modern',
-) {
+export function showBanner(name: string, version: string, style: BannerStyle = 'modern') {
   if (process.env.CI === 'true' || !process.stdout.isTTY) {
     console.log(chalk.gray(`${name} v${version}`));
     return;

@@ -57,7 +57,8 @@
     "prepare": "node -e \"if(require('fs').existsSync('.git')) { require('child_process').execSync('husky install', {stdio:'inherit'}) }\"",
     "prepublishOnly": "yarn build",
     "type-check": "tsc --noEmit",
-    "check": "yarn lint && yarn type-check && yarn test",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "check": "yarn lint && yarn type-check && yarn format:check && yarn test",
     "bootstrap:sample": "yarn --cwd SampleApp install && (cd SampleApp/ios && pod install --repo-update)"
   },
   "author": "Kushal Agrawal",

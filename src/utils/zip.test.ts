@@ -29,9 +29,7 @@ describe('addDirToZip', () => {
   });
 
   it('recursively adds files from subdirectories', async () => {
-    mockReaddir
-      .mockResolvedValueOnce(['images'])
-      .mockResolvedValueOnce(['logo.png']);
+    mockReaddir.mockResolvedValueOnce(['images']).mockResolvedValueOnce(['logo.png']);
     mockStat
       .mockResolvedValueOnce({ isDirectory: () => true })
       .mockResolvedValueOnce({ isDirectory: () => false });
@@ -63,9 +61,7 @@ describe('addDirToZip', () => {
   });
 
   it('uses posix separators in zip paths regardless of OS', async () => {
-    mockReaddir
-      .mockResolvedValueOnce(['sub'])
-      .mockResolvedValueOnce(['file.js']);
+    mockReaddir.mockResolvedValueOnce(['sub']).mockResolvedValueOnce(['file.js']);
     mockStat
       .mockResolvedValueOnce({ isDirectory: () => true })
       .mockResolvedValueOnce({ isDirectory: () => false });
