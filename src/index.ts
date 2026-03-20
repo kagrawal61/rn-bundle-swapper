@@ -1,13 +1,14 @@
 export interface AndroidSwapOptions {
   apkPath: string;
   jsBundlePath: string;
-  bundleEntry?: string;
   keystorePath: string;
   keystorePassword: string;
   keyAlias: string;
   keyPassword?: string;
   outputPath: string;
   copyAssets?: boolean;
+  /** Override the bundle entry path inside the APK. Defaults to 'assets/index.android.bundle'. */
+  bundleEntry?: string;
 }
 
 export interface IosAppSwapOptions {
