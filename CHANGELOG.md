@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `buildBundle` — build a React Native JS bundle via Metro with optional Hermes compilation
 - CLI commands: `android`, `ios-app`, `ios-ipa`
 - `--build-jsbundle` / `--project-root` / `--no-hermes` flags for in-place bundle building
-- `--copy-assets` flag for Metro asset copying (default: off)
+- `--copy-assets` flag for Metro asset copying (default: on)
 - `--config <file.json>` support for file-based CLI configuration
 - `RNBS_BANNER_STYLE` env var for banner style customisation (`modern` / `compact` / `ascii`)
 - TypeScript-first API with full type exports
