@@ -382,6 +382,7 @@ await swapAndroid(options: AndroidSwapOptions): Promise<void>
 | `keyPassword` | `string` | — | Key password (if different) |
 | `outputPath` | `string` | ✅ | Output APK path |
 | `copyAssets` | `boolean` | — | Copy Metro assets (default: `true`) |
+| `bundleEntry` | `string` | — | Bundle entry path inside the APK (default: `assets/index.android.bundle`) |
 
 ```ts
 await swapAndroid({
@@ -409,6 +410,7 @@ await swapIosApp(options: IosAppSwapOptions): Promise<void>
 | `jsBundlePath` | `string` | ✅ | Path to JS bundle |
 | `outputPath` | `string` | ✅ | Output `.app` path |
 | `copyAssets` | `boolean` | — | Copy Metro assets (default: `true`) |
+| `bundleName` | `string` | — | Bundle filename inside the `.app` (default: `main.jsbundle`) |
 
 ```ts
 await swapIosApp({
@@ -434,6 +436,7 @@ await swapIosIpa(options: IosIpaSwapOptions): Promise<void>
 | `outputPath` | `string` | ✅ | Output `.ipa` path |
 | `ci` | `boolean` | — | Fail fast if codesign unavailable |
 | `copyAssets` | `boolean` | — | Copy Metro assets (default: `true`) |
+| `bundleName` | `string` | — | Bundle filename inside the `.app` (default: `main.jsbundle`) |
 
 ```ts
 await swapIosIpa({

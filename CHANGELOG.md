@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `bundleEntry` option on `AndroidSwapOptions` — override the bundle entry path inside the APK (default: `assets/index.android.bundle`) for apps with a custom Metro `bundleName`
+- `bundleName` option on `IosAppSwapOptions` and `IosIpaSwapOptions` — override the bundle filename inside the `.app` (default: `main.jsbundle`) for apps with a custom bundle filename
+- `format:check` script (`prettier --check "src/**/*.ts"`) wired into the pre-commit hook, `check` script, and CI workflow to enforce consistent formatting
+
 ## [0.1.0] - 2025-01-20
 
 ### Added
