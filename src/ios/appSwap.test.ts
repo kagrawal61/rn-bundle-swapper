@@ -89,6 +89,14 @@ describe('swapIosApp', () => {
         expect.stringContaining('main.jsbundle')
       );
     });
+
+    it('uses a custom bundleName when provided', async () => {
+      await swapIosApp({ ...baseOpts, bundleName: 'custom.jsbundle' });
+      expect(mockCopyFile).toHaveBeenCalledWith(
+        'main.jsbundle',
+        expect.stringContaining('custom.jsbundle')
+      );
+    });
   });
 
   describe('asset copying', () => {

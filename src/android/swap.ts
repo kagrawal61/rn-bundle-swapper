@@ -15,6 +15,7 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
   const {
     apkPath,
     jsBundlePath,
+    bundleEntry = 'assets/index.android.bundle',
     outputPath,
     keystorePath,
     keystorePassword,
@@ -32,7 +33,6 @@ export async function swapAndroid(opts: AndroidSwapOptions): Promise<void> {
 
   // Update bundle entry
   const bundleContent = await fs.readFile(jsBundlePath);
-  const bundleEntry = 'assets/index.android.bundle';
   if (zip.getEntry(bundleEntry)) {
     zip.deleteFile(bundleEntry);
   }

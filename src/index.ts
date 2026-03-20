@@ -1,6 +1,7 @@
 export interface AndroidSwapOptions {
   apkPath: string;
   jsBundlePath: string;
+  bundleEntry?: string;
   keystorePath: string;
   keystorePassword: string;
   keyAlias: string;
@@ -14,6 +15,7 @@ export interface IosAppSwapOptions {
   jsBundlePath: string;
   outputPath: string;
   copyAssets?: boolean;
+  bundleName?: string;
 }
 
 export interface IosIpaSwapOptions {
@@ -23,6 +25,7 @@ export interface IosIpaSwapOptions {
   outputPath: string;
   ci?: boolean;
   copyAssets?: boolean;
+  bundleName?: string;
 }
 
 export { swapAndroid } from './android/swap.js';

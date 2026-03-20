@@ -11,7 +11,7 @@ import { assertExists } from '../utils/validate.js';
  * Replace JS bundle inside IPA and re-sign.
  */
 export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
-  const { ipaPath, jsBundlePath, outputPath, identity, ci, copyAssets = true } = opts;
+  const { ipaPath, jsBundlePath, outputPath, identity, ci, copyAssets = true, bundleName = 'main.jsbundle' } = opts;
 
   assertExists(ipaPath, 'IPA');
   assertExists(jsBundlePath, 'JS bundle');
@@ -39,7 +39,7 @@ export async function swapIosIpa(opts: IosIpaSwapOptions): Promise<void> {
     const appPath = path.join(payloadDir, apps[0]);
 
     // Replace main.jsbundle
-    const destBundle = path.join(appPath, 'main.jsbundle');
+    const destBundle = path.join(appPath, bundleName);
     await fs.copyFile(jsBundlePath, destBundle);
 
     if (copyAssets) {

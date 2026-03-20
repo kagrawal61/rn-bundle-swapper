@@ -110,6 +110,14 @@ describe('swapIosIpa', () => {
         expect.stringContaining('main.jsbundle')
       );
     });
+
+    it('uses a custom bundleName when provided', async () => {
+      await swapIosIpa({ ...baseOpts, bundleName: 'custom.jsbundle' });
+      expect(mockCopyFile).toHaveBeenCalledWith(
+        'main.jsbundle',
+        expect.stringContaining('custom.jsbundle')
+      );
+    });
   });
 
   describe('code signing', () => {
