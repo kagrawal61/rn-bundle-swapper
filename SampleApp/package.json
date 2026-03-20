@@ -18,9 +18,9 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "19.1.1",
-    "@react-native-community/cli-platform-android": "19.1.1",
-    "@react-native-community/cli-platform-ios": "19.1.1",
+    "@react-native-community/cli": "20.1.2",
+    "@react-native-community/cli-platform-android": "20.1.2",
+    "@react-native-community/cli-platform-ios": "20.1.2",
     "@react-native/babel-preset": "0.80.2",
     "@react-native/eslint-config": "0.80.2",
     "@react-native/metro-config": "0.80.2",
@@ -36,5 +36,27 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "resolutions": {
+    "ajv": "^6.14.0",
+    "flatted": "3.4.2",
+    "fast-xml-parser": "5.5.7",
+    "minimatch": "3.1.4",
+    "@typescript-eslint/typescript-estree/minimatch": "9.0.7",
+    "js-yaml": "3.14.2",
+    "lodash": "4.17.23",
+    "qs": "6.14.2"
+  },
+  "overrides": {
+    "ajv": "^6.14.0",
+    "flatted": "3.4.2",
+    "fast-xml-parser": "5.5.7",
+    "minimatch": "3.1.4",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "9.0.7"
+    },
+    "js-yaml": "3.14.2",
+    "lodash": "4.17.23",
+    "qs": "6.14.2"
   }
 }
