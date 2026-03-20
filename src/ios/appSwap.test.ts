@@ -51,7 +51,7 @@ describe('swapIosApp', () => {
 
     it('throws when the JS bundle file does not exist', async () => {
       mockExistsSync
-        .mockReturnValueOnce(true)   // .app exists
+        .mockReturnValueOnce(true) // .app exists
         .mockReturnValueOnce(false); // bundle missing
       await expect(swapIosApp(baseOpts)).rejects.toThrow('JS bundle not found');
     });
@@ -86,7 +86,7 @@ describe('swapIosApp', () => {
       await swapIosApp(baseOpts);
       expect(mockCopyFile).toHaveBeenCalledWith(
         'main.jsbundle',
-        expect.stringContaining('main.jsbundle')
+        expect.stringContaining('main.jsbundle'),
       );
     });
 
@@ -94,7 +94,7 @@ describe('swapIosApp', () => {
       await swapIosApp({ ...baseOpts, bundleName: 'custom.jsbundle' });
       expect(mockCopyFile).toHaveBeenCalledWith(
         'main.jsbundle',
-        expect.stringContaining('custom.jsbundle')
+        expect.stringContaining('custom.jsbundle'),
       );
     });
   });

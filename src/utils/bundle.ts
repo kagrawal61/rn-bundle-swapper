@@ -40,8 +40,7 @@ function findEntryFile(projectRoot: string): string {
  */
 function findHermesc(projectRoot: string): string | null {
   const plat = os.platform();
-  const binDir =
-    plat === 'darwin' ? 'osx-bin' : plat === 'win32' ? 'win64-bin' : 'linux64-bin';
+  const binDir = plat === 'darwin' ? 'osx-bin' : plat === 'win32' ? 'win64-bin' : 'linux64-bin';
   const binName = plat === 'win32' ? 'hermesc.exe' : 'hermesc';
 
   const candidates = [
@@ -82,21 +81,26 @@ export async function buildBundle(opts: BuildBundleOptions): Promise<BuildBundle
   const rnCmd = fs.existsSync(rnBin) ? rnBin : 'react-native';
 
   const bundleSpinner = logger.spinner(
-    `Building ${platform} bundle (entry: ${entry}, dev: ${dev})...`
+    `Building ${platform} bundle (entry: ${entry}, dev: ${dev})...`,
   );
   try {
     await execa(
       rnCmd,
       [
         'bundle',
-        '--platform', platform,
-        '--dev', String(dev),
-        '--entry-file', entry,
-        '--bundle-output', bundlePath,
-        '--assets-dest', assetsDir,
+        '--platform',
+        platform,
+        '--dev',
+        String(dev),
+        '--entry-file',
+        entry,
+        '--bundle-output',
+        bundlePath,
+        '--assets-dest',
+        assetsDir,
         '--reset-cache',
       ],
-      { cwd: projectRoot }
+      { cwd: projectRoot },
     );
     bundleSpinner.succeed('Bundle built');
   } catch (err) {
@@ -109,7 +113,7 @@ export async function buildBundle(opts: BuildBundleOptions): Promise<BuildBundle
     const hermesc = findHermesc(projectRoot);
     if (!hermesc) {
       logger.warn(
-        'hermesc not found in node_modules — skipping Hermes compilation. Pass --no-hermes to suppress this warning.'
+        'hermesc not found in node_modules — skipping Hermes compilation. Pass --no-hermes to suppress this warning.',
       );
     } else {
       const hbcPath = bundlePath + '.hbc';

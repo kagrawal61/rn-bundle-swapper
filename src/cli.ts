@@ -22,7 +22,7 @@ const program = new Command();
 program
   .name('rn-bundle-swapper')
   .description(
-    'Swap or update the JavaScript bundle inside an already–built React Native APK, .app, or .ipa file.'
+    'Swap or update the JavaScript bundle inside an already–built React Native APK, .app, or .ipa file.',
   )
   .version(version)
   .addHelpCommand('help [command]', 'Display help for a specific command')
@@ -90,8 +90,12 @@ const MISSING_ARG_HINTS: Record<string, { message: string; hints: string[] }> = 
 
 function setupMissingArgHint(cmd: Command): void {
   cmd.configureOutput({
-    outputError: () => { /* suppress Commander's default error/help-after-error — we show our own */ },
-    writeErr: () => { /* suppress showHelpAfterError text */ },
+    outputError: () => {
+      /* suppress Commander's default error/help-after-error — we show our own */
+    },
+    writeErr: () => {
+      /* suppress showHelpAfterError text */
+    },
   });
   cmd.exitOverride((err) => {
     const msg = err.message;
@@ -120,7 +124,9 @@ androidCmd
   .option('--key-pass <password>', 'Key password')
   .option('--no-copy-assets', 'Skip copying Metro assets alongside the bundle')
   .option('-o, --output <path>', 'Output APK path', 'patched.apk')
-  .addHelpText('after', `
+  .addHelpText(
+    'after',
+    `
 Examples:
   # Use a pre-built bundle
   $ rn-bundle-swapper android app.apk \\
@@ -136,7 +142,8 @@ Examples:
   $ rn-bundle-swapper android app.apk \\
       --build-jsbundle --no-hermes --project-root ./MyApp \\
       --keystore my.keystore --ks-pass android --ks-alias myalias
-`)
+`,
+  )
   .action(async (apkPath, options) => {
     const missingOpts: { key: string; flag: string; hints: string[] }[] = [
       {
@@ -221,7 +228,9 @@ iosAppCmd
   .option('--no-hermes', 'Skip Hermes bytecode compilation when building bundle')
   .option('--no-copy-assets', 'Skip copying Metro assets alongside the bundle')
   .option('-o, --output <path>', 'Output .app path', 'Patched.app')
-  .addHelpText('after', `
+  .addHelpText(
+    'after',
+    `
 Examples:
   # Use a pre-built bundle
   $ rn-bundle-swapper ios-app MyApp.app --jsbundle main.jsbundle
@@ -229,7 +238,8 @@ Examples:
   # Build bundle from project, then swap
   $ rn-bundle-swapper ios-app MyApp.app \\
       --build-jsbundle --project-root ./MyApp
-`)
+`,
+  )
   .action(async (appPath, options) => {
     let jsBundlePath: string;
     let buildOutDir: string | undefined;
@@ -277,7 +287,9 @@ iosIpaCmd
   .option('--no-copy-assets', 'Skip copying Metro assets alongside the bundle')
   .option('-o, --output <path>', 'Output .ipa path', 'Patched.ipa')
   .option('--ci', 'Fail if identity not found; non-interactive', false)
-  .addHelpText('after', `
+  .addHelpText(
+    'after',
+    `
 Examples:
   # Use a pre-built bundle
   $ rn-bundle-swapper ios-ipa MyApp.ipa \\
@@ -289,7 +301,8 @@ Examples:
       --build-jsbundle --project-root ./MyApp \\
       --identity "Apple Distribution: Example Corp (TEAMID)" \\
       --ci
-`)
+`,
+  )
   .action(async (ipaPath, options) => {
     if (!options.identity) {
       cliError('Missing required option: --identity', [

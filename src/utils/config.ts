@@ -6,11 +6,21 @@ import fs from 'fs-extra';
  */
 export const ALLOWED_CONFIG_KEYS = new Set([
   // Shared
-  'jsbundle', 'build-jsbundle', 'project-root', 'no-hermes', 'copy-assets', 'no-copy-assets', 'output',
+  'jsbundle',
+  'build-jsbundle',
+  'project-root',
+  'no-hermes',
+  'copy-assets',
+  'no-copy-assets',
+  'output',
   // Android
-  'keystore', 'ks-pass', 'ks-alias', 'key-pass',
+  'keystore',
+  'ks-pass',
+  'ks-alias',
+  'key-pass',
   // iOS IPA
-  'identity', 'ci',
+  'identity',
+  'ci',
 ]);
 
 /**

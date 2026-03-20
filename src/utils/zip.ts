@@ -15,4 +15,4 @@ export async function addDirToZip(zip: AdmZip, dirPath: string, zipRoot: string)
       zip.addFile(zipPath, content);
     }
   }
-} 
+}
