@@ -10,7 +10,7 @@ import { assertExists } from '../utils/validate.js';
  *  - Copies Metro assets into the bundle (root/assets) if copyAssets is true
  */
 export async function swapIosApp(opts: IosAppSwapOptions): Promise<void> {
-  const { appPath, jsBundlePath, outputPath, copyAssets = true } = opts;
+  const { appPath, jsBundlePath, outputPath, copyAssets = true, bundleName = 'main.jsbundle' } = opts;
 
   assertExists(appPath, '.app directory');
   assertExists(jsBundlePath, 'JS bundle');
@@ -22,7 +22,7 @@ export async function swapIosApp(opts: IosAppSwapOptions): Promise<void> {
   await fs.copy(appPath, outputPath);
 
   // Replace main.jsbundle
-  const destBundle = path.join(outputPath, 'main.jsbundle');
+  const destBundle = path.join(outputPath, bundleName);
   await fs.copyFile(jsBundlePath, destBundle);
 
   if (copyAssets) {
